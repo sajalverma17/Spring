@@ -1,0 +1,60 @@
+<resources>
+    <!-- General Theme -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:textColorPrimary">@color/colorPrimaryText</item>
+        <item name="android:textColorSecondary">@color/colorSecondaryText</item>
+        <item name="android:icon">@color/colorIcons</item>
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+
+    <!-- Fullscreen Theme for IntroSlider WelcomeActivity Theme -->
+    <style name="FullScreenTheme" parent="AppTheme">
+        <item name="android:windowFullscreen">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- Toolbar(replacing ActionBar) Theme for HomeActivity-->
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="actionOverflowMenuStyle">@style/Widget.AppCompat.Light.PopupMenu.Overflow</item>
+
+    </style>
+
+    <style name="DirectoryChooserTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="imageButtonStyle">?android:borderlessButtonStyle</item>
+    </style>
+
+    <style name="GreyStatusBar" parent="AppTheme.NoActionBar">
+        <item name="colorPrimaryDark">@android:color/darker_gray</item>
+    </style>
+
+
+    <!--<style name="ActionOverflowStyle" parent="Widget.AppCompat.ListPopupWindow">-->
+    <!--<item name="android:textColor">@android:color/black</item>-->
+    <!--<item name="android:background">@android:color/white</item>-->
+    <!--</style>-->
+
+    <style name="ActionOverflowStyle" parent="@style/ThemeOverlay.AppCompat.Light">
+
+        <item name="colorControlHighlight">@color/colorPrimary</item>
+        <item name="android:textColor">@android:color/black</item>
+
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+
+</resources>

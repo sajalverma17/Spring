@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">Spring</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="gotit">GOT IT!</string>
+    <string name="retry">Retry</string>
+    <string name="downloadLabel">Spring</string>
+
+    <string name="songString">song</string>
+    <string name="albumString">album</string>
+    <string name="playlistString">playlist</string>
+    <!--<array name="CachedPidReadErrorMsgs">-->
+    <!--<item name="incorrect_cached_pids_directory">"Spring is unable to find songs saved offline"</item>-->
+    <!--<item name="read_permission_needed">"Denied access to storage :("</item>-->
+    <!--<item name="zero_songs_cached">"You have no songs saved offline"</item>-->
+    <!--</array>-->
+
+    <string name="menu_run_intro_again">Run intro again</string>
+    <string name="menu_set_storage_folder">Save folder location</string>
+    <string name="go_to_playstore">Get it here!</string>
+    <string name="package_not_found">Oops! Seems like you don\'t have that one app Spring so dearly needs for its voodoo...</string>
+
+    <string name="please_install_file_manager">Please install a file manager</string>
+    <string name="please_grant_storage_permission">Storage access is needed to decrypt/download songs</string>
+    <string name="storage_permission_granted">Thanks! Have fun downloading :)</string>
+    <string name="decryption_successfull">Done! Find the decrypted song in save location</string>
+    <string name="decryption_failed">There was a problem decrypting this song.</string>
+    <string name="not_enough_space">Not enough space. Do some housekeeping!</string>
+    <string name="download_queued">Download already queued</string>
+    <string name="download_started">Downloading. Song will be saved in save location</string>
+
+    <string name="you_are_offline">You\'re offline</string>
+    <string name="unavailable_song">The song is unavailable for download</string>
+
+    <string name="only_songs_albums_playlists">Whoa! Spring can only handle music!</string>
+    <string name="error_processing_link">Error processing shared music!</string>
+    <string name="unable_to_find_offline_songs">Spring is unable to find songs saved offline</string>
+    <string name="zero_songs_saved_offline">You have no songs saved offline</string>
+    <string name="ghost_image_zero_songs_saved_offline">You have no songs saved offline. Share a song with Spring and it will download the song for you!</string>
+
+    <string name="generic_network_error">There was an error with the network</string>
+    <string name="network_too_slow">Network is too slow.</string>
+    <string name="unable_to_connect">Oops! Unable to reach the server.</string>
+    <string name="rejected_by_server">Ouch! Server rejected the request. Retry later.</string>
+    <string name="unkown_io_exception">Whoops! Something\'s wrong with the network.</string>
+
+
+    <string name="slide_1_title">Spring</string>
+    <string name="slide_1_desc">Get your favourite songs in your pocket!</string>
+
+    <string name="slide_2_title">Download songs</string>
+    <string name="slide_2_desc">Click on the share button of a playlist, album or a song…</string>
+
+    <string name="slide_3_title">""</string>
+    <string name="slide_3_desc">scroll to the right then share via Spring to download songs directly to your device</string>
+
+    <string name="slide_4_title">Decrypt songs</string>
+    <string name="slide_4_desc">Spring can also decrypt songs you saved offline, so you can play them in any music player!</string>
+    <string name="title_activity_shared_songs">SharedSongsActivity</string>
+    <string name="title_activity_tab">TabActivity</string>
+
+</resources>

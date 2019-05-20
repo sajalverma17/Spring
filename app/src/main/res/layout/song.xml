@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/mainContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/songDetailsContainer"
+            android:layout_weight=".80"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/songRow"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                >
+
+                <ImageView
+                    android:id="@+id/albumArt"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.20"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+
+                    android:padding="0dp"
+                    android:layout_margin="5dp"
+                    app:srcCompat="@drawable/defaultart"/>
+
+                <LinearLayout
+                    android:id="@+id/songDescription"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight=".80"
+                    android:clipChildren="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:id="@+id/tvTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="@android:color/black"/>
+
+                    <TextView
+                        android:id="@+id/tvArtists"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="@color/colorSecondaryText"
+                        android:textSize="12sp"
+
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:alpha=".1"
+                android:background="@android:color/black"/>
+        </LinearLayout>
+    <ImageButton
+        android:id="@+id/btnSpringAction"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:padding="18dp"
+        android:layout_weight=".20"
+        android:theme="@style/DirectoryChooserTheme"
+        app:srcCompat="@drawable/download_icon"
+        />
+
+</LinearLayout>

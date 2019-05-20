@@ -1,0 +1,124 @@
+package com.rarecase.spring;
+
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.rarecase.utils.SpringSharedPref;
+
+import net.rdrei.android.dirchooser.DirectoryChooserActivity;
+import net.rdrei.android.dirchooser.DirectoryChooserConfig;
+
+public class TabActivity extends AppCompatActivity {
+
+    private static final int DIRECTORY_PICKER_REQUEST_CODE = 139;
+    static final int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 100;
+    TabViewPagerAdapter tabViewPagerAdapter;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_tab);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        ViewPager mPager = (ViewPager) findViewById(R.id.tabViewPager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+
+        Fragment offLineSongsFragment = new HomeActivity();
+        Fragment lastSharedSongsFragment = new SharedSongListActivity();
+
+        tabViewPagerAdapter = new TabViewPagerAdapter(getSupportFragmentManager());
+        tabViewPagerAdapter.addFragment(offLineSongsFragment,"Offline");
+        tabViewPagerAdapter.addFragment(lastSharedSongsFragment,"Recently Shared");
+        mPager.setAdapter(tabViewPagerAdapter);
+
+        tabLayout.setupWithViewPager(mPager);
+        requestStoragePermission();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == DIRECTORY_PICKER_REQUEST_CODE) {
+            if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
+                SpringSharedPref pref = new SpringSharedPref(this);
+                pref.setStoragePath(data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR));
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults){
+        if(requestCode == WRITE_EXTERNAL_STORAGE_REQUEST_CODE){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                //Current Fragment's presenter will be called here. Get current from fragment
+                ISongListView currentFragment = (ISongListView) tabViewPagerAdapter.getItem(0);
+                currentFragment.getPresenter().loadOfflineSongs();
+            }else{
+                Toast.makeText(this,this.getString(R.string.please_grant_storage_permission),Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.menu_storage_path:
+
+                final Intent chooserIntent = new Intent(this, DirectoryChooserActivity.class);
+                final DirectoryChooserConfig config = DirectoryChooserConfig.builder()
+                        .newDirectoryName("Spring")
+                        .allowReadOnlyDirectory(true)
+                        .allowNewDirectoryNameModification(true)
+                        .initialDirectory(new SpringSharedPref(this).getStoragePath())
+                        .build();
+                chooserIntent.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
+                startActivityForResult(chooserIntent, DIRECTORY_PICKER_REQUEST_CODE);
+
+                break;
+
+            case R.id.menu_item_run_demo_again:
+
+                SpringSharedPref pref = new SpringSharedPref(this);
+                pref.setFirstTime(true);
+                startActivity(new Intent(this, WelcomeActivity.class));
+
+                break;
+        }
+        return true;
+    }
+
+    public void requestStoragePermission(){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},WRITE_EXTERNAL_STORAGE_REQUEST_CODE);
+        }
+    }
+}
+
+
