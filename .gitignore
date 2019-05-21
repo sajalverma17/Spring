@@ -1,4 +1,6 @@
 *.iml
+*.jks
+*.apk
 .gradle/
 .idea/
 /.idea/workspace.xml
