@@ -4,6 +4,8 @@ Spring is an Android app that breaks the subscription system of an Indian music 
 
 Uses client-side decryption combined with some web-scraping to exploit a vulnerability.   
 
+Download the apk file from the initial release [here] https://github.com/sajalverma17/Spring/releases/tag/0.1 
+
 ![Screenshot1](https://user-images.githubusercontent.com/25904133/58053023-abb9df80-7b56-11e9-9934-bc78b4571c55.png)
 
 Share a song, album or a playlist with Spring, and it will be made available for you to download:
