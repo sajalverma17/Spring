@@ -77,7 +77,6 @@ public class SongItemPresenter implements ISongItemPresenter,Observer{
                     if (result != -1) {
                         _listView.showSnackbar(_context.getString(R.string.decryption_successfull));
                     } else {
-                        //TODO : Low Priority - Find the song which fails to decrypt with decryptSongPartial method
                         DRMManager.decryptSong(song.getId(),song.getSong(),storagePath);
                         _listView.showSnackbar(_context.getString(R.string.decryption_failed));
                     }

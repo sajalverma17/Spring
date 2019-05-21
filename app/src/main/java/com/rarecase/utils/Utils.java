@@ -59,7 +59,10 @@ public class Utils {
             musicMetadata.setAlbum(song.getAlbum());
             String artists = song.getFeatured_artists().equals("") ? song.getPrimary_artists() : song.getPrimary_artists()+" ft. "+song.getFeatured_artists();
             musicMetadata.setArtist(artists);
-            musicMetadata.addPicture(imageData); //Doesn't work. Open issue. Probably need to use a diff ID3 tag library
+
+            if(imageData != null) {
+                musicMetadata.addPicture(imageData); //TODO : Doesn't work. Open issue. Probably need to use a diff ID3 tag library
+            }
 
             id3.update(springActionFile,musicMetadataSet,musicMetadata);
         } catch (IOException | ID3WriteException e) {

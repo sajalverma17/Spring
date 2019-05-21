@@ -88,6 +88,23 @@ class SongCacheManager(val context : Context){
         return hashMap
     }
 
+    fun getImage(album: String?) : Bitmap?{
+        val cachePath = context.externalCacheDir.path + "/albumArts"
+        val cacheDir = File(cachePath)
+        cacheDir.mkdir()
+        val files = cacheDir.listFiles()
+
+        var bitmap : Bitmap? = null
+        if(files != null){
+            for (file in files){
+                if(file.nameWithoutExtension == album) {
+                   bitmap = BitmapFactory.decodeFile(cachePath+"/"+file.name)
+                }
+            }
+        }
+        return  bitmap
+    }
+
 
 
 
