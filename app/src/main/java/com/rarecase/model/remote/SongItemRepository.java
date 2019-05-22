@@ -53,9 +53,12 @@ public class SongItemRepository extends Observable {
             @Override
             protected void onPostExecute(Pair<String,Bitmap> result){
                 if(result != null){
-                    imgCache.put(result.first,result.second); //Keep adding to the imgCache after every download.
-                    SongCacheManager songCacheManager = new SongCacheManager(_context);
-                    songCacheManager.cacheImage(result.first, result.second);
+                    if(result.second != null) {
+                        //Cache image only if download successfully
+                        imgCache.put(result.first, result.second);                          //Cache to app memory.
+                        SongCacheManager songCacheManager = new SongCacheManager(_context);
+                        songCacheManager.cacheImage(result.first, result.second);           //Cache to disk
+                    }
                     setChanged();
                     notifyObservers(result);
                 }

@@ -3,5 +3,7 @@
     <!--<base-config cleartextTrafficPermitted="true" />-->
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">h.saavncdn.com</domain>
+        <domain includeSubdomains="true">c.saavncdn.com</domain>
+        <domain includeSubdomains="true">www.saavn.com</domain>
     </domain-config>
 </network-security-config>

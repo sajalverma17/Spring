@@ -16,3 +16,8 @@
 #   public *;
 #}
 -ignorewarnings
+-keeppackagenames org.jsoup.nodes
+-keeppackagenames org.cmc.music
+-keepclasseswithmembernames class * {
+    native <methods>;
+}

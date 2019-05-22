@@ -132,7 +132,9 @@ public class SongItemPresenter implements ISongItemPresenter,Observer{
                 if(arg instanceof Pair){
                     Pair result = (Pair)arg;
                     if(result.first.equals(_itemView.getSongItemAlbum())) {
-                        _itemView.setAlbumArt((Bitmap) result.second);
+                        if(result.second != null) {
+                            _itemView.setAlbumArt((Bitmap) result.second);
+                        }
                     }
                 }
             }
