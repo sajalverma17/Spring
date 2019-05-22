@@ -116,7 +116,6 @@ public class SongDownloadService extends IntentService {
                         os.close();
                     } catch (IOException e) {
                         Log.i("DownloadSongService", "IO exception: Download interrupted");
-                        e.printStackTrace();
                         Utils.showToastFromService(uiHandler,getApplicationContext(),"Failed to download "+song.getSong()+" - Poor network");
                         return;
                     }

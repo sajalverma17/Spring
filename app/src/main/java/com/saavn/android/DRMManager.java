@@ -40,7 +40,7 @@ public class DRMManager {
             }
             return new String(aG.doFinal(decode));
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.i("DRMManager: ","Error decrypting media Url"+e.getMessage());
             return str2;
         }
     }

@@ -75,7 +75,7 @@ public class Scraper extends Observable{
                     }
                     Log.i("Scraper",pids.toString());
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.i("Scraper:", "Exception parsing using JSoup"+e.getMessage());
                     return null;
                 }
                 return pids;
