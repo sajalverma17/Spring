@@ -31,6 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
+        android:background="@android:color/darker_gray"
         android:text="@string/go_to_playstore"
         android:layout_centerHorizontal="true"
         android:onClick="launchPlaystore"

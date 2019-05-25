@@ -13,6 +13,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rarecase.model.PidType;
@@ -119,7 +121,10 @@ public class SharedSongListActivity extends Fragment implements ISongListView {
 
     @Override
     public void showErrorPopulatingSongs(String errorText) {
-
+        LinearLayout errorLayout = (LinearLayout) thisView.findViewById(R.id.errorLayout);
+        TextView textView = (TextView) errorLayout.findViewById(R.id.errorTextView);
+        textView.setText(errorText);
+        errorLayout.setVisibility(View.VISIBLE);
     }
 
     @Override

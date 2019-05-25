@@ -88,7 +88,7 @@ public class SongListPresenter implements ISongListPresenter, Observer {
             _view.requestStoragePermission();
         }else if(!CachedPidsReader.pidsExist()){
             _view.showErrorPopulatingSongs(_context.getString(R.string.ghost_image_zero_songs_saved_offline));
-            _view.showSnackbar(_context.getString(R.string.zero_songs_saved_offline));
+            //_view.showSnackbar(_context.getString(R.string.zero_songs_saved_offline));
         }else {
             //Found cached encrypted song directory with one or more mp3 files.
             pids = CachedPidsReader.getCachedPids();
