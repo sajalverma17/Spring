@@ -12,7 +12,7 @@
     <string name="playlistString">playlist</string>
 
     <string name="menu_run_intro_again">Run intro again</string>
-    <string name="menu_set_storage_folder">Save folder location</string>
+    <string name="menu_set_storage_folder">Download location</string>
     <string name="go_to_playstore">Get it here!</string>
     <string name="package_not_found">Oops! Seems like you don\'t have that one app Spring consumes to perform its voodoo magic.</string>
 
