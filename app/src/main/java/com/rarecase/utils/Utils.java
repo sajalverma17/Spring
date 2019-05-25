@@ -72,14 +72,6 @@ public class Utils {
     }
 
     /**
-     * Unique file name. The file name will later be used to read the file
-     * and add ID3 tags to it.
-     */
-    public static String generateSpringActionFileName(String songName,String pid){
-        return songName+"-"+pid+".mp3";
-    }
-
-    /**
      * songName must not contain any special characters like '/'.
      * Use the curateSongName method to form a proper file name for file system
      */

@@ -3,7 +3,6 @@ package com.rarecase.presenter.presenters;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.util.Pair;
 
 import com.rarecase.model.PidType;
@@ -84,7 +83,6 @@ public class SongItemPresenter implements ISongItemPresenter,Observer{
                 } else if (_itemView.getViewPidType() == PidType.Shared || _itemView.getViewPidType() == PidType.Downloading) {
 
                     String mediaUrl = DRMManager.decryptMediaURL(song.getEnc_media_url());
-                    Log.i("SongItemPresenter:", "Got media url :" + mediaUrl);
                     if ((mediaUrl != null)) {
                         if(!mediaUrl.isEmpty() || (mediaUrl.endsWith(".mp3") || mediaUrl.endsWith(".mp4")) ) {
                                 if(Utils.isOnline(_context)) {
