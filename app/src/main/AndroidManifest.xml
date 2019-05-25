@@ -44,11 +44,6 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name="com.rarecase.model.remote.SongDownloadService"
-            android:exported="false">
-        </service>
-
         <receiver
             android:name=".DownloadCompleteReceiver"
             android:enabled="true"

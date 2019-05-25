@@ -4,12 +4,8 @@ import android.app.DownloadManager
 
 import android.content.Context
 import android.net.Uri
-import android.os.Parcel
-import android.os.ParcelFileDescriptor
-import android.util.Log
 import com.rarecase.model.Song
 import com.rarecase.model.SongCacheManager
-import java.io.*
 
 /**
  * Using Android's DownloadManager.

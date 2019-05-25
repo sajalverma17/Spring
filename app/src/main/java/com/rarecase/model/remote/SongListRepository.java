@@ -2,8 +2,6 @@ package com.rarecase.model.remote;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.rarecase.model.PidType;
 import com.rarecase.model.Song;
@@ -11,11 +9,9 @@ import com.rarecase.model.SongCacheManager;
 import com.rarecase.model.SongJsonParser;
 import com.rarecase.presenter.presenters.SongListPresenter;
 import com.rarecase.utils.HttpHelper;
-import com.rarecase.utils.SortingHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Observer;
 
