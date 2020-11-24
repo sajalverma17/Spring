@@ -52,14 +52,14 @@ class IntroViewPagerAdapter(val context: Context,activityWelcomeLayout: View) : 
         viewPager.setOnPageChangeListener(PageChangeListener())
     }
 
-    override fun isViewFromObject(view: View?, `object`: Any?): Boolean {
+    override fun isViewFromObject(view: View, `object`: Any): Boolean {
         return view == `object`
     }
 
-    override fun instantiateItem(container: ViewGroup?, position: Int): Any {
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val layoutInflator : LayoutInflater = LayoutInflater.from(context)
         val introPageView : View = layoutInflator.inflate(arrayIntroSlidePages[position],container,false)
-        container?.addView(introPageView)
+        container.addView(introPageView)
         return introPageView
     }
 
@@ -67,8 +67,8 @@ class IntroViewPagerAdapter(val context: Context,activityWelcomeLayout: View) : 
         return arrayIntroSlidePages.size
     }
 
-    override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
-        container?.removeView(`object` as View)
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+        container.removeView(`object` as View)
     }
 
     //Listens to page changes either by btnNext click or swiping

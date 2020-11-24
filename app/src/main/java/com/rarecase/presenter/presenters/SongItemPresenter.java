@@ -27,9 +27,9 @@ import java.util.Observer;
 
 public class SongItemPresenter implements ISongItemPresenter,Observer{
 
-    private Context _context; //To pass into shared prefs
+    private final Context _context; //To pass into shared prefs
     private ISongListView _listView;
-    private ISongItemView _itemView;
+    private final ISongItemView _itemView;
     private static SongItemRepository _itemRepository;
     private static final int MIN_STORAGE_SPACE_REQUIRED = 20;
 

@@ -66,13 +66,13 @@ class SongsRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         recyclerViewContext = recyclerView?.context
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-        val layout: View = LayoutInflater.from(parent?.context).inflate(R.layout.song, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val layout: View = LayoutInflater.from(parent.context).inflate(R.layout.song, parent, false)
 
         //Initialize ViewHolder with PidType to distinguish in ItemPresenter
         val holder = myViewHolder(layout,_listType)
@@ -83,7 +83,7 @@ class SongsRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>
         return holder
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         val songItem: Song = song_list[position]
         val title = songItem.song

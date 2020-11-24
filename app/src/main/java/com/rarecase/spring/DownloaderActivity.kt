@@ -10,11 +10,9 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.Layout
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.rarecase.model.PidType
 import com.rarecase.model.Song
 import com.rarecase.presenter.contracts.ISongListPresenter
@@ -34,7 +32,7 @@ class DownloaderActivity : AppCompatActivity(), ISongListView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_downloader)
 
-        val content = findViewById(R.id.content_home)
+        val content = findViewById<RelativeLayout>(R.id.content_home)
         songsRecyclerView = content.findViewById(R.id.songsRecyclerView) as RecyclerView
         val layoutManager = LinearLayoutManager(this)
         songsRecyclerView.layoutManager = layoutManager
@@ -83,13 +81,13 @@ class DownloaderActivity : AppCompatActivity(), ISongListView {
     }
 
     override fun showProgressBar() {
-        val view = findViewById(R.id.content_home)
+        val view = findViewById<RelativeLayout>(R.id.content_home)
         val p = view.findViewById(R.id.loadingRecyclerViewProgressBar) as ProgressBar
         p.visibility = View.VISIBLE
     }
 
     override fun hideProgressBar() {
-        val view = findViewById(R.id.content_home)
+        val view = findViewById<RelativeLayout>(R.id.content_home)
         val p = view.findViewById(R.id.loadingRecyclerViewProgressBar) as ProgressBar
         p.visibility = View.INVISIBLE
     }
