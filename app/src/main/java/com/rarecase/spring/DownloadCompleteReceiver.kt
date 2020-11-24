@@ -18,8 +18,8 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
         if(intent?.action == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {
             if(context?.packageName == "com.rarecase.spring") {
                 //Download Ref only used for Logging so far
-                val downloadRef = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1) as Long
-                val cursor = (context?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager).query(DownloadManager.Query().setFilterById(downloadRef))
+                val downloadRef = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+                val cursor = (context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager).query(DownloadManager.Query().setFilterById(downloadRef))
 
                 if (cursor.moveToFirst()) {
                     val colIndex_LocalUri: Int

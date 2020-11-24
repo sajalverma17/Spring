@@ -1,6 +1,5 @@
 package com.saavn.android;
 
-import android.support.compat.*;
 import android.util.Base64;
 import android.util.Log;
 

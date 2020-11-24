@@ -1,7 +1,7 @@
 package com.rarecase.utils;
 
 import android.os.Environment;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

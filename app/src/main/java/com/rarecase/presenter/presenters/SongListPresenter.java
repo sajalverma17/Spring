@@ -2,7 +2,7 @@ package com.rarecase.presenter.presenters;
 
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.rarecase.model.PidType;
 import com.rarecase.model.Song;

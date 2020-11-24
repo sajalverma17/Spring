@@ -1,9 +1,10 @@
 package com.rarecase.spring
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 
-class TabViewPagerAdapter(fm: android.support.v4.app.FragmentManager?) : FragmentPagerAdapter(fm) {
+class TabViewPagerAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm) {
 
 
     var activityList = mutableListOf<Fragment>()

@@ -3,13 +3,13 @@ package com.rarecase.spring
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.Layout
 import android.view.View
 import android.widget.*
@@ -93,11 +93,11 @@ class DownloaderActivity : AppCompatActivity(), ISongListView {
     }
 
     override fun showSnackbar(msg: String) {
-        Snackbar.make(findViewById(R.id.content_home),msg,Snackbar.LENGTH_LONG).show()
+        Snackbar.make(findViewById(R.id.content_home),msg, Snackbar.LENGTH_LONG).show()
     }
 
     override fun showSnackbarWithAction(msg: String, actionText: String?, action: Callable<*>?) {
-        val s = Snackbar.make(findViewById(R.id.content_home),msg,Snackbar.LENGTH_INDEFINITE)
+        val s = Snackbar.make(findViewById(R.id.content_home),msg, Snackbar.LENGTH_INDEFINITE)
         s.setAction(actionText, { action?.call() })
         s.show()
     }

@@ -2,7 +2,7 @@ package com.rarecase.spring
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,7 +68,7 @@ class SongsRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
-        recyclerViewContext = recyclerView?.context
+        recyclerViewContext = recyclerView.context
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
