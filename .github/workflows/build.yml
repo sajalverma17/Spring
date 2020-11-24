@@ -2,12 +2,9 @@ name: Build
 
 # Controls when the action will run.  
 on:
-  push:
-    branches:
-      - master
   pull_request:
-    branches:
-      - master
+  push:
+    branches: [ master ]
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -22,6 +19,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout the code
         uses: actions/checkout@v2
+      
+      - name: Add permission to execute gradlew
+        run: chmod +x ./gradlew
 
       # Build the app
       - name: Build the app
