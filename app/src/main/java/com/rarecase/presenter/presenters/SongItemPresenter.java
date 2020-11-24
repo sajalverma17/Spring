@@ -30,7 +30,6 @@ public class SongItemPresenter implements ISongItemPresenter,Observer{
     private Context _context; //To pass into shared prefs
     private ISongListView _listView;
     private ISongItemView _itemView;
-    //TODO : Make imgCache static here instead of itemRepository.
     private static SongItemRepository _itemRepository;
     private static final int MIN_STORAGE_SPACE_REQUIRED = 20;
 

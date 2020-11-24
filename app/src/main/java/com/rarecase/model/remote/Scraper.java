@@ -6,12 +6,14 @@ import android.util.Log;
 
 import com.rarecase.model.Song;
 import com.rarecase.model.SongJsonParser;
+import com.rarecase.utils.HttpHelper;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -25,17 +27,45 @@ public class Scraper extends Observable{
 
     private String _url;
 
-    /**
-     * Set the URL
-     * @param sharedUrl The exact URL extracted in presenter from shared string extra.
-     */
-    public Scraper(String sharedUrl) {
-        _url = sharedUrl;
+    public Scraper(String sharedURL) {
+        _url = sharedURL;
     }
+
 
     @Override
     public synchronized void addObserver(Observer o) {
         super.addObserver(o);
+    }
+
+    public void getRedirectURL()
+    {
+        new AsyncTask<String, Void, URL>() {
+            @Override
+            protected URL doInBackground(String... params) {
+                URL redirectURL = null;
+                Log.i("Scraper","URL to redirect:"+_url);
+                try {
+                    String urlString = HttpHelper.getRedirectURL(_url);
+                    redirectURL = new URL(urlString);
+                } catch (Exception e) {
+                    Log.i("Scraper:", "Exception getting redirectURL: "+e.getMessage());
+                    return null;
+                }
+                return redirectURL;
+            }
+
+            @Override
+            protected void onPostExecute(URL redirectedURL){
+                Log.i("Scraper","Got redirected URL: "+redirectedURL);
+                setChanged();
+                if(redirectedURL == null) {
+                    notifyObservers("UNK");
+                }
+                else {
+                    notifyObservers(redirectedURL);
+                }
+            }
+        }.execute();
     }
 
     /**
@@ -48,13 +78,13 @@ public class Scraper extends Observable{
             @Override
             protected List<String> doInBackground(String... params) {
                 List<String> pids;
-                Log.i("Scraper",_url);
+                Log.i("Scraper", "URL to scrape for Pids:"+_url);
                 try {
                     Document webpage = Jsoup.connect(_url).get();
 
                     Elements songJsonElements = new Elements();
 
-                    if(_url.contains("www.saavn.com/s/song/")){
+                    if(_url.contains("/s/song/")){
                         songJsonElements.add(webpage.getElementsByClass("hide song-json").first());
                     }else {
                         songJsonElements = webpage.getElementsByClass("hide song-json");

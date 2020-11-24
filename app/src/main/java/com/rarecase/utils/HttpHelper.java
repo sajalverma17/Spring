@@ -12,6 +12,8 @@ import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -19,38 +21,18 @@ import java.net.UnknownHostException;
  */
 public class HttpHelper {
 
-    /**Connects to the the url of the media file
-     * @param url URL of the audio file
-     * @return An input stream pointing to the media file. Null if an IO exception occurs.
-     */
-    public static InputStream downloadSong(String url){
-
-        HttpURLConnection conn = setupConnection(url);
-        InputStream inputStream;
-        try {
-            inputStream = conn.getInputStream();
-        } catch (IOException e) {
-            Log.i("HttpHelper: ","downloadSong() failed");
-            return null;
-        }
-        if (inputStream != null) {
-            return inputStream;
-        }else{
-            return  null;
-        }
-    }
-
     /**Returns a Bitmap of image from a URL
      *
      * @param image_url URL of the image
      * @return {@code Bitmap object}
      */
     public static Bitmap downloadImage(String image_url){
-
-        HttpURLConnection conn = setupConnection(image_url);
-        InputStream is ;
+        InputStream is = null;
         try {
-            is = conn.getInputStream();
+            HttpURLConnection conn = setupConnection(image_url);
+            if(conn != null) {
+                is = conn.getInputStream();
+            }
         }catch (IOException ioe){
             Log.i("HttpHelper: ","downloadImage() failed");
             return null;
@@ -105,28 +87,63 @@ public class HttpHelper {
     }
 
     /**
+     * Gets the redirect URL by doing an HTTP GET on the given address.     *
+     * @param address
+     * @return Returns a URL in string or null if response doesn't contain the 2 required headers: status(should be 301) and location
+     */
+    public static String getRedirectURL(String address){
+
+        try {
+            HttpURLConnection conn = setupConnection(address);
+            if(conn != null) {
+                int responseCode = conn.getResponseCode();
+                Map<String, List<String>> map = conn.getHeaderFields();
+
+                if(responseCode == 301 || responseCode == 302){
+                    return map.get("location").get(0);
+                }
+            }
+        } catch (SocketTimeoutException ste){
+            return "STE";
+        } catch (UnknownHostException uhe){
+            return "UHE";
+        } catch (IOException e) {
+            if(e.getMessage().contains("Got response code 503")) {
+                return "503";
+            }else {
+                return "UNK";
+            }
+        }
+        return null;
+    }
+
+    /**
      * Sets up an HTTP connection
      * @param address
      * @return {@code HttpURLConnection} object tied to address parameter
      *
      */
-    private static HttpURLConnection setupConnection(String address){
+    private static HttpURLConnection setupConnection(String address) throws IOException {
         HttpURLConnection conn = null;
+        int responseCode = 404;
         try {
             URL url = new URL(address);
             conn = (HttpURLConnection) url.openConnection();
+            conn.setInstanceFollowRedirects(false);
             conn.setReadTimeout(10000);
             conn.setConnectTimeout(15000);
             conn.setRequestMethod("GET");
             conn.setDoInput(true);
             conn.connect();
-            int responseCode = conn.getResponseCode();
-            if (responseCode != 200 ) {
-                throw new IOException("Got response code "+responseCode);
-            }
+            responseCode = conn.getResponseCode();
         }
         catch (IOException ioe){
-            Log.i("HttpHelper:","IOException in setupConnection");
+            Log.i("HttpHelper:","IOException in setupConnection. Address:"+address);
+        }
+
+        // TODO : Get this out of setup and check valid response in individual http methods.
+        if (responseCode != 200 && responseCode != 301 ) {
+            throw new IOException("Got response code "+responseCode);
         }
         return conn;
     }

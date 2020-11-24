@@ -61,7 +61,7 @@ public class Utils {
             musicMetadata.setArtist(artists);
 
             if(imageData != null) {
-                musicMetadata.addPicture(imageData); //TODO : Doesn't work. Open issue. Probably need to use a diff ID3 tag library
+                musicMetadata.addPicture(imageData); // Doesn't work. Won't fix.
             }
 
             id3.update(springActionFile,musicMetadataSet,musicMetadata);
