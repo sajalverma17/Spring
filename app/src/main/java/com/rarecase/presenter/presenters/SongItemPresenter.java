@@ -1,6 +1,6 @@
 package com.rarecase.presenter.presenters;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Pair;
@@ -27,10 +27,9 @@ import java.util.Observer;
 
 public class SongItemPresenter implements ISongItemPresenter,Observer{
 
-    private Context _context; //To pass into shared prefs
+    private final Context _context; //To pass into shared prefs
     private ISongListView _listView;
-    private ISongItemView _itemView;
-    //TODO : Make imgCache static here instead of itemRepository.
+    private final ISongItemView _itemView;
     private static SongItemRepository _itemRepository;
     private static final int MIN_STORAGE_SPACE_REQUIRED = 20;
 

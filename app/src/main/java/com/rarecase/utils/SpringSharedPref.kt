@@ -30,7 +30,7 @@ class SpringSharedPref(context : Context){
             editor.apply()
         }
 
-    var storagePath = Environment.getExternalStorageDirectory().absolutePath
+    var storagePath: String? = Environment.getExternalStorageDirectory().absolutePath
         get() {
             if(sharedPreferences.contains(STORAGE_PATH)){
                 field = sharedPreferences.getString(STORAGE_PATH,field)

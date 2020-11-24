@@ -2,7 +2,7 @@ package com.rarecase.presenter.presenters;
 
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.rarecase.model.PidType;
 import com.rarecase.model.Song;
@@ -17,6 +17,7 @@ import com.rarecase.spring.TabActivity;
 import com.rarecase.utils.CachedPidsReader;
 import com.rarecase.utils.SortingHelper;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -32,7 +33,8 @@ public class SongListPresenter implements ISongListPresenter, Observer {
 
     private ISongListView _view;
     private Context _context;
-    private String _stringExtra;
+    private String _retryUrl;
+    private RetryOperation _retryOperation;
     private List<String> pids;
 
     public SongListPresenter(Context context,ISongListView view){
@@ -52,33 +54,6 @@ public class SongListPresenter implements ISongListPresenter, Observer {
             _view = view;
         }
         _context = context; //Passed to Repository to access Cache
-    }
-
-    private class retryCall implements Callable{
-
-        private PidType _pidType;
-        private Object _sourceInstance;
-
-        retryCall(Object sourceInstance){
-
-           if(_view instanceof HomeActivity)
-               _pidType = PidType.Offline;
-            if(_view instanceof DownloaderActivity)
-                _pidType = PidType.Shared;
-            _sourceInstance = sourceInstance;
-        }
-
-        @Override
-        public Object call() throws Exception {
-
-            if(_sourceInstance instanceof Scraper) {
-                processStringExtra(_stringExtra);
-            }
-            if(_sourceInstance instanceof SongListRepository) {
-                loadSongDetails(pids, _pidType);
-            }
-            return null;
-        }
     }
 
     @Override
@@ -134,9 +109,43 @@ public class SongListPresenter implements ISongListPresenter, Observer {
                 if(o instanceof Scraper){
                     List<String> pidList = (List<String>) arg;
                     pids = pidList;
-                    loadSongDetails(pidList,PidType.Shared);
+                    loadSongDetails(pidList, PidType.Shared);
+                }
+            } else if (arg instanceof URL) {
+
+                // Output from scraper's getRedirectURL asyc operation will be followed with scraping async operation
+                if (o instanceof Scraper){
+                    String url = arg.toString();
+                    scrapeForPidsAsync(url);
                 }
             }
+        }
+    }
+
+    /**
+     * Called by a view when user shares a string extra form hostapp to Spring. Is the entry point for a chain of async tasks:
+     * 1. GetRedirectedUrl
+     * 2. Scrape the webpage of the redirected URL for PIDs (and song details)
+     * 3. Get song details of each PIDs from host app\s API.
+     * @param stringExtra
+     */
+    public void processStringExtra(String stringExtra){
+
+        String trimmedStringExtra = stringExtra.substring(14, stringExtra.length());
+        if( trimmedStringExtra.startsWith(_context.getString(R.string.albumString))
+                || trimmedStringExtra.startsWith(_context.getString(R.string.songString))
+                || trimmedStringExtra.startsWith(_context.getString(R.string.playlistString)))
+        {
+            Pattern pattern = Pattern.compile(".*(http.*)");
+            Matcher matcher = pattern.matcher(stringExtra);
+            if(matcher.find()){
+                String url = matcher.group(1);
+                getRedirectedURL(url);
+            } else {
+                _view.showSnackbar(_context.getString(R.string.error_processing_link));
+            }
+        } else {
+            _view.showSnackbar(_context.getString(R.string.only_songs_albums_playlists));
         }
     }
 
@@ -153,34 +162,64 @@ public class SongListPresenter implements ISongListPresenter, Observer {
         repository.loadSongDetails(pids,pidType);
     }
 
-    /**
-     * Method to extract webpage url and pass it to Scraper
-     * @param stringExtra The intent data string shared to Spring
+    /** The information we scrape for is in the source HTML of
+     * the redirected page we reach when hitting this string Extra shared by host app. So we execute an http GET to get the redirect url
      */
-    public void processStringExtra(String stringExtra){
+    private void getRedirectedURL(String url)    {
         _view.showProgressBar();
-        _stringExtra = stringExtra;
+        _retryUrl = url;
+        _retryOperation = RetryOperation.Redirect;
+        Scraper webScraper = new Scraper(url);
+        webScraper.addObserver(this);
+        webScraper.getRedirectURL();
+    }
 
-        String trimmedStringExtra = stringExtra.substring(14, stringExtra.length());
-        if( trimmedStringExtra.startsWith(_context.getString(R.string.albumString))
-                || trimmedStringExtra.startsWith(_context.getString(R.string.songString))
-                || trimmedStringExtra.startsWith(_context.getString(R.string.playlistString)))
-        {
-            Pattern pattern = Pattern.compile(".*(http.*)");
-            Matcher matcher = pattern.matcher(stringExtra);
-            if(matcher.find()){
-                String url = matcher.group(1);
-                Scraper webScraper = new Scraper(url);
-                webScraper.addObserver(this);
-                webScraper.scrapeForPidsAsync();
-            }else{
-                _view.hideProgressBar();
-                _view.showSnackbar(_context.getString(R.string.error_processing_link));
-            }
-        }else {
-            _view.hideProgressBar();
-            _view.showSnackbar(_context.getString(R.string.only_songs_albums_playlists));
+    /**
+     * Scrapes the webpage to get PIDs.
+     */
+    private void scrapeForPidsAsync(String url){
+        _view.showProgressBar();
+        _retryUrl = url;
+        _retryOperation = RetryOperation.Scraping;
+        Scraper webScraper = new Scraper(url);
+        webScraper.addObserver(this);
+        webScraper.scrapeForPidsAsync();
+    }
+
+    private class retryCall implements Callable{
+
+        private PidType _pidType;
+        private Object _sourceInstance;
+
+        retryCall(Object sourceInstance){
+
+            if(_view instanceof HomeActivity)
+                _pidType = PidType.Offline;
+            if(_view instanceof DownloaderActivity)
+                _pidType = PidType.Shared;
+            _sourceInstance = sourceInstance;
         }
+
+        @Override
+        public Object call() throws Exception {
+
+            if(_sourceInstance instanceof Scraper) {
+                if(_retryOperation == RetryOperation.Scraping) {
+                    scrapeForPidsAsync(_retryUrl);
+                } else if(_retryOperation == RetryOperation.Redirect) {
+                    getRedirectedURL(_retryUrl);
+                }
+            }
+            if(_sourceInstance instanceof SongListRepository) {
+                loadSongDetails(pids, _pidType);
+            }
+            return null;
+        }
+    }
+
+    private enum RetryOperation {
+        Scraping,
+        Redirect
     }
 
 }

@@ -3,18 +3,16 @@ package com.rarecase.spring
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import android.text.Layout
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.rarecase.model.PidType
 import com.rarecase.model.Song
 import com.rarecase.presenter.contracts.ISongListPresenter
@@ -34,7 +32,7 @@ class DownloaderActivity : AppCompatActivity(), ISongListView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_downloader)
 
-        val content = findViewById(R.id.content_home)
+        val content = findViewById<RelativeLayout>(R.id.content_home)
         songsRecyclerView = content.findViewById(R.id.songsRecyclerView) as RecyclerView
         val layoutManager = LinearLayoutManager(this)
         songsRecyclerView.layoutManager = layoutManager
@@ -77,29 +75,29 @@ class DownloaderActivity : AppCompatActivity(), ISongListView {
     }
 
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState?.putParcelableArrayList("savedSongList",savedSongList)
+        outState.putParcelableArrayList("savedSongList",savedSongList)
     }
 
     override fun showProgressBar() {
-        val view = findViewById(R.id.content_home)
+        val view = findViewById<RelativeLayout>(R.id.content_home)
         val p = view.findViewById(R.id.loadingRecyclerViewProgressBar) as ProgressBar
         p.visibility = View.VISIBLE
     }
 
     override fun hideProgressBar() {
-        val view = findViewById(R.id.content_home)
+        val view = findViewById<RelativeLayout>(R.id.content_home)
         val p = view.findViewById(R.id.loadingRecyclerViewProgressBar) as ProgressBar
         p.visibility = View.INVISIBLE
     }
 
     override fun showSnackbar(msg: String) {
-        Snackbar.make(findViewById(R.id.content_home),msg,Snackbar.LENGTH_LONG).show()
+        Snackbar.make(findViewById(R.id.content_home),msg, Snackbar.LENGTH_LONG).show()
     }
 
     override fun showSnackbarWithAction(msg: String, actionText: String?, action: Callable<*>?) {
-        val s = Snackbar.make(findViewById(R.id.content_home),msg,Snackbar.LENGTH_INDEFINITE)
+        val s = Snackbar.make(findViewById(R.id.content_home),msg, Snackbar.LENGTH_INDEFINITE)
         s.setAction(actionText, { action?.call() })
         s.show()
     }

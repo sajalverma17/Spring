@@ -1,8 +1,8 @@
 package com.saavn.android;
 
-import android.support.compat.BuildConfig;
 import android.util.Base64;
 import android.util.Log;
+
 import com.rarecase.utils.CachedPidsReader;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class DRMManager {
     public native int ndkdecryptPartial(String str,String str2,String str3);
 
     public static String decryptMediaURL(String str) {
-        String str2 = BuildConfig.VERSION_NAME;
+        String str2 = "1.0";
         try {
             //byte[] decode = R == Base64Exists.YES ? Base64.decode(str, 0) : d.a(str, 0);
             byte[] decode = Base64.decode(str,0);
