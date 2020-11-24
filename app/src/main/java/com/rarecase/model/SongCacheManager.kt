@@ -64,7 +64,7 @@ class SongCacheManager(val context : Context){
     }
 
     fun cacheImage(album : String, albumArt : Bitmap){
-            val cachePath = context.externalCacheDir.path + "/albumArts"
+            val cachePath = context.externalCacheDir?.path + "/albumArts"
             val cacheDir = File(cachePath)
             cacheDir.mkdir()
 
@@ -73,7 +73,7 @@ class SongCacheManager(val context : Context){
     }
 
     fun getImageCache() : HashMap<String,Bitmap> {
-        val cachePath = context.externalCacheDir.path+ "/albumArts"
+        val cachePath = context.externalCacheDir?.path+ "/albumArts"
         val cacheDir = File(cachePath)
         cacheDir.mkdir()
         val hashMap = HashMap<String,Bitmap>()
@@ -89,7 +89,7 @@ class SongCacheManager(val context : Context){
     }
 
     fun getImage(album: String?) : Bitmap?{
-        val cachePath = context.externalCacheDir.path + "/albumArts"
+        val cachePath = context.externalCacheDir?.path + "/albumArts"
         val cacheDir = File(cachePath)
         cacheDir.mkdir()
         val files = cacheDir.listFiles()
@@ -112,11 +112,11 @@ class SongCacheManager(val context : Context){
     private fun setUpCache(pidType: PidType,clearSharedCache : Boolean = true): String {
             var cachePath = ""
             if (pidType == PidType.Offline)
-                cachePath = context.externalCacheDir.path + "/offline"
+                cachePath = context.externalCacheDir?.path + "/offline"
             if (pidType == PidType.Shared)
-                cachePath = context.externalCacheDir.path + "/shared"
+                cachePath = context.externalCacheDir?.path + "/shared"
             if (pidType == PidType.Downloading)
-                cachePath = context.externalCacheDir.path + "/downloading"
+                cachePath = context.externalCacheDir?.path + "/downloading"
 
             val cacheDir = File(cachePath)
 
@@ -126,20 +126,20 @@ class SongCacheManager(val context : Context){
                         cacheDir.deleteRecursively()
 
                     //Delete download history when a new list of Songs are shared to Spring
-                    val downloadedFolder = File(context.externalCacheDir.path + "/downloaded")
+                    val downloadedFolder = File(context.externalCacheDir?.path + "/downloaded")
                     if(downloadedFolder.exists() && downloadedFolder.isDirectory) {
                         downloadedFolder.deleteRecursively()
                     }
 
                     //Delete album Arts as well when new list of songs are shared to Spring
-                    val imageCacheFolder = File(context.externalCacheDir.path + "/albumArts")
+                    val imageCacheFolder = File(context.externalCacheDir?.path + "/albumArts")
                     if(imageCacheFolder.exists() && imageCacheFolder.isDirectory) {
                         imageCacheFolder.deleteRecursively()
                     }
                 }
             }
             cacheDir.mkdir()
-            return cachePath+"/"
+            return "$cachePath/"
     }
 
     private fun writeToCache(song: Song, cacheFilePath: String) {

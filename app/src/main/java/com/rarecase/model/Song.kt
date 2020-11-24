@@ -19,7 +19,7 @@ data class Song(var id : String,
 
     constructor(songid: String):this(id = songid)
 
-    constructor(data : Parcel):this(id = data.readString()){
+    constructor(data : Parcel):this(id = data.readString()!!){
         //id = data?.readString()
         song = data.readString()
         album = data.readString()

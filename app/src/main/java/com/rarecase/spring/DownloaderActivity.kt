@@ -75,9 +75,9 @@ class DownloaderActivity : AppCompatActivity(), ISongListView {
     }
 
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState?.putParcelableArrayList("savedSongList",savedSongList)
+        outState.putParcelableArrayList("savedSongList",savedSongList)
     }
 
     override fun showProgressBar() {

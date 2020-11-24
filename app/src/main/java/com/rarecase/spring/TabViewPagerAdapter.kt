@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
-class TabViewPagerAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm) {
+class TabViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
 
     var activityList = mutableListOf<Fragment>()
