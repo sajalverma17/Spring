@@ -1,4 +1,4 @@
-package com.rarecase.model;
+package com.rarecase.model.json;
 
 import android.util.Log;
 
@@ -6,6 +6,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.rarecase.model.Song;
 import com.rarecase.utils.Utils;
 
 import java.lang.reflect.Type;
@@ -13,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/*
+TODO: Rename to SongJsonDeserializer
+ */
 class SongDeserializer implements JsonDeserializer<List<Song>> {
 
     List<String> pids;

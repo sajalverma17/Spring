@@ -1,9 +1,10 @@
-package com.rarecase.model;
+package com.rarecase.model.json;
 
 import androidx.annotation.Nullable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.rarecase.model.Song;
 
 import java.lang.reflect.Type;
 import java.util.List;

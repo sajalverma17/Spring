@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import com.rarecase.model.PidType;
 import com.rarecase.model.Song;
 import com.rarecase.model.SongCacheManager;
-import com.rarecase.model.SongJsonParser;
+import com.rarecase.model.json.SongJsonParser;
 import com.rarecase.presenter.presenters.SongListPresenter;
 import com.rarecase.utils.HttpHelper;
 
