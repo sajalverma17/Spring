@@ -15,9 +15,16 @@ class WebpageJsonDeserializer(pageType: PageType) : JsonDeserializer<List<JsonEl
     }
 
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): List<JsonElement> {
-        val returnList : List<JsonElement> = listOf()
+        val returnList : MutableList<JsonElement> = mutableListOf()
         val jsonObject = json?.asJsonObject
 
+        if (_pageType == PageType.Song){
+            val songMetaMember = jsonObject?.getAsJsonObject("song")
+            val songJson = songMetaMember?.getAsJsonObject("song")
+            if (songJson != null) {
+                returnList.add(0, songJson)
+            }
+        }
 
      return returnList
     }

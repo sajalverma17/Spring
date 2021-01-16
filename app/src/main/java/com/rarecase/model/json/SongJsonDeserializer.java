@@ -13,15 +13,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/*
-TODO: Rename to SongJsonDeserializer
- */
-class SongDeserializer implements JsonDeserializer<List<Song>> {
+class SongJsonDeserializer implements JsonDeserializer<List<Song>> {
 
     List<String> pids;
 
-    SongDeserializer(List<String> pids){
+    SongJsonDeserializer(List<String> pids){
         this.pids = pids;
     }
     @Override
@@ -69,7 +65,7 @@ class SongDeserializer implements JsonDeserializer<List<Song>> {
                 }
             }else {
                 JsonObject song_json = j.getAsJsonObject();
-                JsonElement jsong_id = song_json.get("songid");
+                JsonElement jsong_id = song_json.get("id");
                 String song_id = jsong_id.getAsString();
                 Song song = new Song(song_id);
                 songs.add(song);

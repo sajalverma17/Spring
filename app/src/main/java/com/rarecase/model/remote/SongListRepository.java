@@ -67,8 +67,8 @@ public class SongListRepository extends java.util.Observable{
      */
     private void downloadSongDetailsAsync(final List<String> pids, final PidType pidType) {
 
-        // TODO: we don't need this API call if we only keep the "share and download" feature.
-        //  Web-scraping gives us the song metadata (enc_media_url, album art, artists etc.)
+        //  Web-scraping gives us the song metadata (enc_media_url, album art, artists etc.) too,
+        // but API response matches with Song model we have, scraping for song object details is not ideal, and may fluctuate with page layout changes, se we keep using API for details.
         final String DETAILS_URL =  "http://www.saavn.com/api.php?__call=song.getDetails&pids="+makeQueryString(pids)+"&ctx=android&_format=json&_marker=0&network_type=mobile&network_subtype=UMTS&network_operator=Android&cc=us&v=23&readable_version=2.6%3A&manufacturer=unknown&model=google_sdk&build=google_sdk-eng+2.3.4+GINGERBREAD+12";
 
         new AsyncTask<Void, Void, String>() {
