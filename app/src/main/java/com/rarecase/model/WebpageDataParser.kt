@@ -3,6 +3,7 @@ package com.rarecase.model
 import android.util.Log
 import com.google.gson.JsonElement
 import com.rarecase.model.json.WebpageJsonParser
+import com.rarecase.utils.Utils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -32,18 +33,29 @@ class WebpageDataParser(url: String) {
         Pids can be in different places in the JSON based on the page type (song/album/playlist)
         */
         var pagetype : PageType = PageType.Song
-        if (_url.startsWith("https://www.jiosaavn.com/song/")){
-            // Song json, there should be a song json element
-            pagetype = PageType.Song
-        }
-        else if (_url.startsWith(("https://www.jiosaavn.com/album"))) {
-            pagetype = PageType.Album
+        when {
+            _url.startsWith("https://www.jiosaavn.com/song/") -> {
+                // Song json, there should be a song json element
+                pagetype = PageType.Song
+            }
+            _url.startsWith(("https://www.jiosaavn.com/album")) -> {
+                pagetype = PageType.Album
+            }
+            _url.startsWith(("https://www.jiosaavn.com/featured")) -> {
+                pagetype = PageType.Featured
+            }
         }
 
         return WebpageJsonParser(pagetype).getSongJsonElements(sanitiseJson(pageJson))
     }
 
     private fun sanitiseJson(pageJson : String) : String {
+
+        val dateTimeSanitized = Utils.RegexReplaceGroup(pageJson, "(new Date\\(\"[0-9A-Za-z.:-]+?\"\\))", "\"JUNK\"")
+        val sanitized = Utils.RegexReplaceGroup(dateTimeSanitized, "(:undefined)", ":\"JUNK\"")
+
+        /*
+        // Remove all -> {new Date("some date time representation")} that I found
         val pattern = Pattern.compile("(new Date\\(\"[0-9A-Za-z.:-]+?\"\\))")
         val matcher = pattern.matcher(pageJson)
 
@@ -58,12 +70,17 @@ class WebpageDataParser(url: String) {
             }
         }
 
-        Log.i("WebpageDataParser", "Sanitised Json extracted from url to scrape:$pageJson")
-        return pageJsonSanitized
+         */
+
+        Log.i("WebpageDataParser", "Sanitised Json extracted from url to scrape:$sanitized")
+        return sanitized
     }
 }
 
 enum class PageType {
     Song,
-    Album
+    Album,
+
+    // Featured playlist for a user
+    Featured
 }

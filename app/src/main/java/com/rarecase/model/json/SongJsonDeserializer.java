@@ -71,7 +71,7 @@ class SongJsonDeserializer implements JsonDeserializer<List<Song>> {
                 songs.add(song);
             }
         }catch(Exception e){
-            Log.i("SongDeserializer","Error deserializing JSON objects into Song objects");
+            Log.i("SongJsonDeserializer","Error deserializing JSON objects into Song objects");
         }
 
 
