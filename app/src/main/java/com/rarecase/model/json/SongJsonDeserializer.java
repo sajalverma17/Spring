@@ -1,4 +1,4 @@
-package com.rarecase.model;
+package com.rarecase.model.json;
 
 import android.util.Log;
 
@@ -6,18 +6,18 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.rarecase.model.Song;
 import com.rarecase.utils.Utils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-
-class SongDeserializer implements JsonDeserializer<List<Song>> {
+class SongJsonDeserializer implements JsonDeserializer<List<Song>> {
 
     List<String> pids;
 
-    SongDeserializer(List<String> pids){
+    SongJsonDeserializer(List<String> pids){
         this.pids = pids;
     }
     @Override
@@ -65,13 +65,13 @@ class SongDeserializer implements JsonDeserializer<List<Song>> {
                 }
             }else {
                 JsonObject song_json = j.getAsJsonObject();
-                JsonElement jsong_id = song_json.get("songid");
+                JsonElement jsong_id = song_json.get("id");
                 String song_id = jsong_id.getAsString();
                 Song song = new Song(song_id);
                 songs.add(song);
             }
         }catch(Exception e){
-            Log.i("SongDeserializer","Error deserializing JSON objects into Song objects");
+            Log.i("SongJsonDeserializer","Error deserializing JSON objects into Song objects");
         }
 
 

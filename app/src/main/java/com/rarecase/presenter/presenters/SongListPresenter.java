@@ -94,7 +94,7 @@ public class SongListPresenter implements ISongListPresenter, Observer {
                     _view.showSnackbarWithAction(_context.getString(R.string.rejected_by_server),_context.getString(R.string.retry),retryAction);
                 }
                 if(error.equals("UNK")){
-                    _view.showSnackbarWithAction(_context.getString(R.string.unkown_io_exception), _context.getString(R.string.retry), retryAction);
+                    _view.showSnackbar(_context.getString(R.string.parsing_exception));
                 }
             } else if (arg instanceof List) {
                 if(o instanceof SongListRepository) {

@@ -134,7 +134,7 @@ public class SharedSongListActivity extends Fragment implements ISongListView {
 
     @Override
     public void setSongList(List<Song> songList) {
-        savedSongList = (ArrayList<Song>)songList;
+        savedSongList = new ArrayList<Song>(songList);
         songsRecyclerView.setAdapter(new SongsRecyclerViewAdapter(songList,PidType.Shared));
     }
 }

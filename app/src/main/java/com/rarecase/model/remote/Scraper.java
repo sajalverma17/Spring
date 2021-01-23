@@ -1,17 +1,17 @@
 package com.rarecase.model.remote;
 
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.gson.JsonElement;
 import com.rarecase.model.Song;
-import com.rarecase.model.SongJsonParser;
+import com.rarecase.model.json.SongJsonParser;
+import com.rarecase.model.WebpageDataParser;
 import com.rarecase.utils.HttpHelper;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,6 +21,8 @@ import java.util.Observer;
 
 /**
  * Class to scrape web page asynchronously.
+ * TODO: Handle invalid JSON exception. Also, Scraper doesn't capture HttpHelper's network error codes (strings) OnPostExecute methods
+ *
  */
 
 public class Scraper extends Observable{
@@ -48,7 +50,7 @@ public class Scraper extends Observable{
                     String urlString = HttpHelper.getRedirectURL(_url);
                     redirectURL = new URL(urlString);
                 } catch (Exception e) {
-                    Log.i("Scraper:", "Exception getting redirectURL: "+e.getMessage());
+                    Log.i("Scraper:", "Exception getting redirect URL: "+e.getMessage());
                     return null;
                 }
                 return redirectURL;
@@ -80,32 +82,24 @@ public class Scraper extends Observable{
                 List<String> pids;
                 Log.i("Scraper", "URL to scrape for Pids:"+_url);
                 try {
-                    Document webpage = Jsoup.connect(_url).get();
-
-                    Elements songJsonElements = new Elements();
-
-                    if(_url.contains("/s/song/")){
-                        songJsonElements.add(webpage.getElementsByClass("hide song-json").first());
-                    }else {
-                        songJsonElements = webpage.getElementsByClass("hide song-json");
-                    }
+                    WebpageDataParser webPageParser = new WebpageDataParser(_url);
+                    List<JsonElement> songJsonElementsInPage = webPageParser.getSongJsonElements();
 
                     List<Song> tempList = new ArrayList<Song>();
-                    for (Element songJson :
-                            songJsonElements) {
+                    for (JsonElement songJson :
+                            songJsonElementsInPage) {
                         SongJsonParser jsonParser = new SongJsonParser();
-                        Song song = jsonParser.getSong(songJson.text());
+                        Song song = jsonParser.getSong(songJson.toString());
                         tempList.add(song);
                     }
 
                     pids = new ArrayList<>();
-                    for (Song s :
-                            tempList) {
+                    for (Song s : tempList) {
                         pids.add(s.getId());
                     }
                     Log.i("Scraper",pids.toString());
                 } catch (Exception e) {
-                    Log.i("Scraper:", "Exception parsing using JSoup"+e.getMessage());
+                    Log.i("Scraper:", "Exception parsing using JSoup "+e.getMessage());
                     return null;
                 }
                 return pids;

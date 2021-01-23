@@ -20,6 +20,8 @@ import org.cmc.music.myid3.MyID3;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
 
@@ -88,6 +90,27 @@ public class Utils {
             }
         }
             return false;
+    }
+
+    public static String RegexReplaceGroup(String targetString, String regexGroupPattern, String replaceValue){
+
+        // Remove all -> {new Date("some date time representation")} that I found
+        Pattern pattern = Pattern.compile(regexGroupPattern);
+        Matcher matcher = pattern.matcher(targetString);
+
+        String sanitizedString = targetString;
+
+        if(matcher.find()){
+
+            int groupCount = matcher.groupCount();
+            for (int i = 0; i < groupCount; i++){
+                String match = matcher.group(i);
+                if (match != null) {
+                    sanitizedString = matcher.replaceAll(replaceValue);
+                }
+            }
+        }
+        return sanitizedString;
     }
 
     public static void showToastFromService(Handler uiHandler, final Context context, final String message){

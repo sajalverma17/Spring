@@ -1,9 +1,10 @@
-package com.rarecase.model;
+package com.rarecase.model.json;
 
 import androidx.annotation.Nullable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.rarecase.model.Song;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -23,7 +24,7 @@ public class SongJsonParser {
      */
     public List<Song> getSongList(String json_string, @Nullable List<String> pids){
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(songListType, new SongDeserializer(pids));
+        builder.registerTypeAdapter(songListType, new SongJsonDeserializer(pids));
         Gson g = builder.create();
         return g.fromJson(json_string,songListType);
     }
@@ -37,7 +38,7 @@ public class SongJsonParser {
      */
     public Song getSong(String json_string){
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(songListType,new SongDeserializer(null));
+        builder.registerTypeAdapter(songListType,new SongJsonDeserializer(null));
         Gson g = builder.create();
         List<Song> songs = g.fromJson(json_string,songListType);
         return songs.get(0);
