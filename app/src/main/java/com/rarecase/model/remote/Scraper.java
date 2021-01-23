@@ -21,6 +21,8 @@ import java.util.Observer;
 
 /**
  * Class to scrape web page asynchronously.
+ * TODO: Handle invalid JSON exception. Also, Scraper doesn't capture HttpHelper's network error codes (strings) OnPostExecute methods
+ *
  */
 
 public class Scraper extends Observable{

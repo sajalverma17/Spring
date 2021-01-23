@@ -42,7 +42,7 @@
     <string name="network_too_slow">Network is too slow.</string>
     <string name="unable_to_connect">Oops! Unable to reach the server.</string>
     <string name="rejected_by_server">Ouch! Server rejected the request. Retry later.</string>
-    <string name="unkown_io_exception">Whoops! Something\'s wrong with the network.</string>
+    <string name="parsing_exception">Whoops! Spring is unable to handle what you shared.</string>
 
 
     <string name="slide_1_title">Spring</string>
