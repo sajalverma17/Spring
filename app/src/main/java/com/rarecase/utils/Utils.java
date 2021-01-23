@@ -95,7 +95,7 @@ public class Utils {
     public static String RegexReplaceGroup(String targetString, String regexGroupPattern, String replaceValue){
 
         // Remove all -> {new Date("some date time representation")} that I found
-        Pattern pattern = Pattern.compile("(new Date\\(\"[0-9A-Za-z.:-]+?\"\\))");
+        Pattern pattern = Pattern.compile(regexGroupPattern);
         Matcher matcher = pattern.matcher(targetString);
 
         String sanitizedString = targetString;

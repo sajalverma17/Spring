@@ -53,25 +53,6 @@ class WebpageDataParser(url: String) {
 
         val dateTimeSanitized = Utils.RegexReplaceGroup(pageJson, "(new Date\\(\"[0-9A-Za-z.:-]+?\"\\))", "\"JUNK\"")
         val sanitized = Utils.RegexReplaceGroup(dateTimeSanitized, "(:undefined)", ":\"JUNK\"")
-
-        /*
-        // Remove all -> {new Date("some date time representation")} that I found
-        val pattern = Pattern.compile("(new Date\\(\"[0-9A-Za-z.:-]+?\"\\))")
-        val matcher = pattern.matcher(pageJson)
-
-        var pageJsonSanitized : String = pageJson
-        if(matcher.find()){
-            val groupCount = matcher.groupCount()
-            for (i in 0 until groupCount){
-                val match: String? = matcher.group(i)
-                if (match != null) {
-                    pageJsonSanitized = matcher.replaceAll("\"JunkString\"")
-                }
-            }
-        }
-
-         */
-
         Log.i("WebpageDataParser", "Sanitised Json extracted from url to scrape:$sanitized")
         return sanitized
     }
