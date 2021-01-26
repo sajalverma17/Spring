@@ -27,7 +27,21 @@ class WebpageDataParser(url: String) {
         val pageBody: Element = _webpage.getElementsByTag("body").get(0)
         val scriptTagInBody = pageBody.getElementsByTag("script")[0]
         val scriptContent = scriptTagInBody.html()
-        val pageJson = scriptContent.split("=")[1].trim()
+
+        // What the content of script tag looks like:
+        /*
+        // WARNING: See the following for security issues around embedding JSON in HTML:
+        // https://redux.js.org/recipes/server-rendering/#security-considerations
+           window.__INITIAL_DATA__ = {"dragdrop":{"hasDropped":false,.......rest of the json with song details......}}
+        */
+
+        // So we split based on =
+        val allDelimitedStrings = scriptContent.split("=")
+        // Skip the element at 0 index which is "window.__INITIAL_DATA__"
+        val jsonStrings = allDelimitedStrings.subList(1, allDelimitedStrings.size)
+        // There can be more than one string elements after 0 index, as the json itself might contain an "=" inside it, so we concat them back
+        val pageJson = jsonStrings.joinToString().trim()
+
 
         /*
         Pids can be in different places in the JSON based on the page type (song/album/playlist)
