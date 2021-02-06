@@ -74,7 +74,7 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
     private fun getSongDetails(context : Context?, pid : String) : Song?
     {
         val songCacheManager = SongCacheManager(context!!)
-        val song = songCacheManager.getCachedSong(pid)          //Get song object with ID3 metadata from cache
+        val song = songCacheManager.getCachedFromDownloadingFolder(pid)          //Get song object with ID3 metadata from cache
         song?.albumArt = songCacheManager.getImage(song?.album) //Get album Art from cache
 
         return song
@@ -82,6 +82,6 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
 
     private fun removeSongDetailsFromCache(context: Context?, pid : String)
     {
-        SongCacheManager(context!!).deleteCache(pid)
+        SongCacheManager(context!!).deleteCachedFromDownloadingFolder(pid)
     }
 }

@@ -3,6 +3,7 @@ package com.rarecase.presenter.presenters;
 import androidx.fragment.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.util.Pair;
 
 import com.rarecase.model.PidType;
@@ -59,23 +60,23 @@ public class SongItemPresenter implements ISongItemPresenter,Observer{
     @Override
     public void performSpringAction(final Song song) {
 
-        if(CachedPidsReader.canWriteToStorage()) {
-            if(CachedPidsReader.freeSpaceInMBs()>MIN_STORAGE_SPACE_REQUIRED) {
+        // if(CachedPidsReader.canWriteToStorage()) {
+            //if(CachedPidsReader.freeSpaceInMBs()>MIN_STORAGE_SPACE_REQUIRED) {
 
-                final String storagePath = new SpringSharedPref(_context).getStoragePath();
+                 final String storagePath = new SpringSharedPref(_context).getStoragePath();
 
                 //All mp3s decrypted will be saved with this name. Later used to identify for ID3 tagging.
                 //String springActionFileName = Utils.generateSpringActionFileName(song.getSong(),song.getId());
 
                 if (_itemView.getViewPidType() == PidType.Offline) {
 
-                    int result = DRMManager.decryptSongPartial(song.getId(),song.getSong(),storagePath);
+                    int result = DRMManager.decryptSongPartial(song.getId(),song.getSong(), storagePath);
                     //Not tagging files when decrypting. Tagging the file on UI thread introduces errors
                     //Utils.tagAudioFile(song,song.getAlbumArt(),storagePath + "/" +song.getSong() +".mp3");
                     if (result != -1) {
                         _listView.showSnackbar(_context.getString(R.string.decryption_successfull));
                     } else {
-                        DRMManager.decryptSong(song.getId(),song.getSong(),storagePath);
+                        DRMManager.decryptSong(song.getId(),song.getSong(), storagePath);
                         _listView.showSnackbar(_context.getString(R.string.decryption_failed));
                     }
 
@@ -92,7 +93,7 @@ public class SongItemPresenter implements ISongItemPresenter,Observer{
                                             _listView.showSnackbar(_context.getString(R.string.download_queued));
                                         }
                                         else {
-                                            _downloadManager.enqueueSongDownload(mediaUrl, song, storagePath);
+                                            _downloadManager.enqueueSongDownload(mediaUrl, song, Environment.DIRECTORY_DOWNLOADS);
                                             _listView.showSnackbar(_context.getString(R.string.download_started));
                                         }
                                 }else {
@@ -103,12 +104,15 @@ public class SongItemPresenter implements ISongItemPresenter,Observer{
                             }
                     }
                 }
-            }else{
+
+            /*else{
                 _listView.showSnackbar(_context.getString(R.string.not_enough_space));
-            }
-        }else {
+            }*/
+
+        /*else {
             _listView.requestStoragePermission();
         }
+        */
     }
 
     @Override
