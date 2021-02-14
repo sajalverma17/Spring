@@ -9,6 +9,8 @@ import android.provider.MediaStore
 import android.util.Log
 import com.rarecase.model.Song
 import com.rarecase.model.SongCacheManager
+import com.rarecase.utils.Utils
+import java.io.File
 
 /**
  * Using Android's DownloadManager.
@@ -31,7 +33,8 @@ class SpringDownloadManager(val context: Context, val song : Song){
         request.setTitle(song.song)
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
         request.setDescription(song.id)
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,song.song)
+        //With scoped storage, this file should be accessible with Uri: content://media/audio/Spring/songName-songId.mp3
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_MUSIC, "Spring"+File.separator+Utils.contentUriFileName(song))
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         downloadManager.enqueue(request)
 
