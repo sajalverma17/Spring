@@ -116,7 +116,7 @@ public class Utils {
     }
 
     public static String contentUriFileName(Song song) {
-        return song.getSong() + "-" + song.getId() + ".mp3";
+        return song.getSong() + "-" + song.getId();
     }
 
     /**
