@@ -98,7 +98,7 @@ public class Utils {
 
     public static boolean hasWritePermission(Context context){
         PackageManager packageManager = context.getPackageManager();
-        return packageManager.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, context.getPackageName()) == PackageManager.PERMISSION_GRANTED
+        return packageManager.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, context.getPackageName()) == PackageManager.PERMISSION_GRANTED;
     }
 
     public static String RegexReplaceGroup(String targetString, String regexGroupPattern, String replaceValue) {
