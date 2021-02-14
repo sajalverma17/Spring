@@ -13,27 +13,28 @@ import java.util.*
 class SongCacheManager(val context : Context){
 
     //Function for caching individual songs is only for songs which currently being downloaded
-    /*
-    Caches the song in the /downloading directory only.
+    /**
+     * Caches the song object to /downloading directory. Downloaded songs are later picked up again,
+     * or their song_id is used to determine if they are in "downloading"
      */
-    fun cacheSong(song : Song){
+    fun cacheSongToDownloadingFolder(song : Song){
         val cachePath = setUpCache(PidType.Downloading,false)
         writeToCache(song,cachePath + song.id + ".md")
     }
 
-    /*
-    Fetches the song from the /downloading directory.
-     Returns null if the song is not found
+    /**
+     * Fetches the song from the /downloading directory.
+     * Returns null if the song is not found
      */
-    fun getCachedSong(songId : String) : Song?{
+    fun getCachedFromDownloadingFolder(songId : String) : Song?{
         val cachePath = setUpCache(PidType.Downloading,false)
         return  readFromCache(cachePath + songId + ".md")
     }
 
-    /*
-    Delete the song from the /downloading directory
+    /**
+     * Delete the song from the /downloading directory
      */
-    fun deleteCache(songId : String) {
+    fun deleteCachedFromDownloadingFolder(songId : String) {
         val cachePath = setUpCache(PidType.Downloading,false)
         deleteFromCache(cachePath + songId + ".md")
     }

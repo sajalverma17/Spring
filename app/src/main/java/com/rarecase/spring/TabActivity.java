@@ -54,17 +54,6 @@ public class TabActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == DIRECTORY_PICKER_REQUEST_CODE) {
-            if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
-                SpringSharedPref pref = new SpringSharedPref(this);
-                pref.setStoragePath(data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR));
-            }
-        }
-    }
-
-    @Override
     public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults){
         if(requestCode == WRITE_EXTERNAL_STORAGE_REQUEST_CODE){
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
@@ -95,7 +84,6 @@ public class TabActivity extends AppCompatActivity {
                         .newDirectoryName("Spring")
                         .allowReadOnlyDirectory(true)
                         .allowNewDirectoryNameModification(true)
-                        .initialDirectory(new SpringSharedPref(this).getStoragePath())
                         .build();
                 chooserIntent.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
                 startActivityForResult(chooserIntent, DIRECTORY_PICKER_REQUEST_CODE);

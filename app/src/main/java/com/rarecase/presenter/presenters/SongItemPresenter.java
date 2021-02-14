@@ -3,6 +3,7 @@ package com.rarecase.presenter.presenters;
 import androidx.fragment.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.util.Pair;
 
 import com.rarecase.model.PidType;
@@ -15,8 +16,6 @@ import com.rarecase.spring.ISongItemView;
 import com.rarecase.spring.ISongListView;
 import com.rarecase.spring.R;
 import com.rarecase.spring.TabActivity;
-import com.rarecase.utils.CachedPidsReader;
-import com.rarecase.utils.SpringSharedPref;
 import com.rarecase.utils.Utils;
 import com.saavn.android.DRMManager;
 
@@ -59,55 +58,49 @@ public class SongItemPresenter implements ISongItemPresenter,Observer{
     @Override
     public void performSpringAction(final Song song) {
 
-        if(CachedPidsReader.canWriteToStorage()) {
-            if(CachedPidsReader.freeSpaceInMBs()>MIN_STORAGE_SPACE_REQUIRED) {
-
-                final String storagePath = new SpringSharedPref(_context).getStoragePath();
-
-                //All mp3s decrypted will be saved with this name. Later used to identify for ID3 tagging.
-                //String springActionFileName = Utils.generateSpringActionFileName(song.getSong(),song.getId());
-
-                if (_itemView.getViewPidType() == PidType.Offline) {
-
-                    int result = DRMManager.decryptSongPartial(song.getId(),song.getSong(),storagePath);
-                    //Not tagging files when decrypting. Tagging the file on UI thread introduces errors
-                    //Utils.tagAudioFile(song,song.getAlbumArt(),storagePath + "/" +song.getSong() +".mp3");
-                    if (result != -1) {
-                        _listView.showSnackbar(_context.getString(R.string.decryption_successfull));
-                    } else {
-                        DRMManager.decryptSong(song.getId(),song.getSong(),storagePath);
-                        _listView.showSnackbar(_context.getString(R.string.decryption_failed));
-                    }
-
-                } else if (_itemView.getViewPidType() == PidType.Shared || _itemView.getViewPidType() == PidType.Downloading) {
-
-                    String mediaUrl = DRMManager.decryptMediaURL(song.getEnc_media_url());
-                    if ((mediaUrl != null)) {
-                        if(!mediaUrl.isEmpty() || (mediaUrl.endsWith(".mp3") || mediaUrl.endsWith(".mp4")) ) {
-                                if(Utils.isOnline(_context)) {
-
-                                        SpringDownloadManager _downloadManager = new SpringDownloadManager(_context,song);
-                                        if(_downloadManager.isDownloadInProgress()){
-                                            if(_itemView.getViewPidType() == PidType.Shared)
-                                            _listView.showSnackbar(_context.getString(R.string.download_queued));
-                                        }
-                                        else {
-                                            _downloadManager.enqueueSongDownload(mediaUrl, song, storagePath);
-                                            _listView.showSnackbar(_context.getString(R.string.download_started));
-                                        }
-                                }else {
-                                    _listView.showSnackbar(_context.getString(R.string.you_are_offline));
-                                }
-                            }else{
-                                _listView.showSnackbar(_context.getString(R.string.unavailable_song));
-                            }
-                    }
-                }
-            }else{
-                _listView.showSnackbar(_context.getString(R.string.not_enough_space));
+        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.Q) {
+            if (!Utils.hasWritePermission(_context)) {
+                _listView.requestStoragePermission();
+                return;
             }
-        }else {
-            _listView.requestStoragePermission();
+        }
+
+        //All mp3s decrypted will be saved with this name. Later used to identify for ID3 tagging.
+        //String springActionFileName = Utils.generateSpringActionFileName(song.getSong(),song.getId());
+        if (_itemView.getViewPidType() == PidType.Offline) {
+
+            int result = DRMManager.decryptSongPartial(song.getId(), song.getSong(), Environment.DIRECTORY_DOWNLOADS);
+            //Not tagging files when decrypting. Tagging the file on UI thread introduces errors
+            //Utils.tagAudioFile(song,song.getAlbumArt(),storagePath + "/" +song.getSong() +".mp3");
+            if (result != -1) {
+                _listView.showSnackbar(_context.getString(R.string.decryption_successfull));
+            } else {
+                DRMManager.decryptSong(song.getId(), song.getSong(), Environment.DIRECTORY_DOWNLOADS);
+                _listView.showSnackbar(_context.getString(R.string.decryption_failed));
+            }
+
+        } else if (_itemView.getViewPidType() == PidType.Shared || _itemView.getViewPidType() == PidType.Downloading) {
+
+            String mediaUrl = DRMManager.decryptMediaURL(song.getEnc_media_url());
+            if ((mediaUrl != null)) {
+                if (!mediaUrl.isEmpty() || (mediaUrl.endsWith(".mp3") || mediaUrl.endsWith(".mp4"))) {
+                    if (Utils.isOnline(_context)) {
+
+                        SpringDownloadManager _downloadManager = new SpringDownloadManager(_context, song);
+                        if (_downloadManager.isDownloadInProgress()) {
+                            if (_itemView.getViewPidType() == PidType.Shared)
+                                _listView.showSnackbar(_context.getString(R.string.download_queued));
+                        } else {
+                            _downloadManager.enqueueSongDownload(mediaUrl, song);
+                            _listView.showSnackbar(_context.getString(R.string.download_started));
+                        }
+                    } else {
+                        _listView.showSnackbar(_context.getString(R.string.you_are_offline));
+                    }
+                } else {
+                    _listView.showSnackbar(_context.getString(R.string.unavailable_song));
+                }
+            }
         }
     }
 

@@ -140,8 +140,6 @@ public class HttpHelper {
         catch (IOException ioe){
             Log.i("HttpHelper:","IOException in setupConnection. Address:"+address);
         }
-
-        // TODO : Get this out of setup and check valid response in individual http methods.
         if (responseCode != 200 && responseCode != 301 ) {
             throw new IOException("Got response code "+responseCode);
         }
