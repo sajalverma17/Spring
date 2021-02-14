@@ -87,27 +87,30 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
         val projection = arrayOf(
                 MediaStore.Audio.AudioColumns._ID,
                 MediaStore.Audio.AudioColumns.TITLE,
-                MediaStore.Audio.AudioColumns.DISPLAY_NAME)
+                MediaStore.Audio.AudioColumns.DISPLAY_NAME,
+                MediaStore.Audio.AudioColumns.DATE_ADDED)
         var contentUri : Uri = Uri.EMPTY
 
-        // Look for the download in "Spring" folder in Music directory
+        // Look for the most recent added downloaded file like this name.
         contentResolver
                 .query(
                         MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         projection,
-                        MediaStore.Audio.AudioColumns.DISPLAY_NAME+"='${Utils.contentUriFileName(song)}'",
+                        MediaStore.Audio.AudioColumns.DISPLAY_NAME+" like '${Utils.contentUriFileName(song)}%'",
                         null,
-                        null)
+                        "${MediaStore.Video.Media.DISPLAY_NAME} DESC")
                 ?.use {
                     Log.i("Count:", ""+it.count)
                     val idColIndex = it.getColumnIndex(MediaStore.Audio.AudioColumns._ID)
                     val titleColIndex = it.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE)
                     val displayNameColIndex = it.getColumnIndex(MediaStore.Audio.AudioColumns.DISPLAY_NAME)
+                    val dateAddedColIndex = it.getColumnIndex(MediaStore.Audio.AudioColumns.DATE_ADDED)
                     if(it.moveToFirst()){
                         contentUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, it.getLong(idColIndex))
                         Log.i("ID", "Id:"+it.getLong(idColIndex).toString())
                         Log.i("Title","Title:"+it.getString(titleColIndex))
                         Log.i("Display Name", "Display name:"+it.getString(displayNameColIndex))
+                        Log.i("Date added", "Date added:"+it.getString(dateAddedColIndex))
                         Log.i("ContentUri", contentUri.toString())
                         Log.i("----","----")
                     }
