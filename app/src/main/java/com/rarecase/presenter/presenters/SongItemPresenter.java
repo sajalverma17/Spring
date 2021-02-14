@@ -89,7 +89,7 @@ public class SongItemPresenter implements ISongItemPresenter,Observer{
                                             _listView.showSnackbar(_context.getString(R.string.download_queued));
                                         }
                                         else {
-                                            _downloadManager.enqueueSongDownload(mediaUrl, song, Environment.DIRECTORY_DOWNLOADS);
+                                            _downloadManager.enqueueSongDownload(mediaUrl, song);
                                             _listView.showSnackbar(_context.getString(R.string.download_started));
                                         }
                                 }else {

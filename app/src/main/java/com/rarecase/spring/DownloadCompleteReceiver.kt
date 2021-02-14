@@ -49,12 +49,13 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
                     if (status == DownloadManager.STATUS_SUCCESSFUL) {
                         Log.i("DownloadComplete", "Download of ${songDetails?.song} successful")
 
-                        // Add ID3 tags on the file
+                        // Add ID3 tags on the file. On >= Android Q, tag temp file then update MediaStore content
                         if(songDetails != null) {
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
                                 val contentUri = getContentUri(context.contentResolver, songDetails)
                                 tagMediaFile(context, contentUri, songDetails)
                             }
+                            // On versions Android Pie and below, tag downloaded file directly (We have write access)
                             else {
                                 val fileURI = URI.create(fileURIString)
                                 Utils.tagAudioFile(songDetails, songDetails.albumArt, File(fileURI))
@@ -102,23 +103,14 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
                 ?.use {
                     Log.i("Count:", ""+it.count)
                     val idColIndex = it.getColumnIndex(MediaStore.Audio.AudioColumns._ID)
-                    val titleColIndex = it.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE)
-                    val displayNameColIndex = it.getColumnIndex(MediaStore.Audio.AudioColumns.DISPLAY_NAME)
-                    val dateAddedColIndex = it.getColumnIndex(MediaStore.Audio.AudioColumns.DATE_ADDED)
                     if(it.moveToFirst()){
                         contentUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, it.getLong(idColIndex))
-                        Log.i("ID", "Id:"+it.getLong(idColIndex).toString())
-                        Log.i("Title","Title:"+it.getString(titleColIndex))
-                        Log.i("Display Name", "Display name:"+it.getString(displayNameColIndex))
-                        Log.i("Date added", "Date added:"+it.getString(dateAddedColIndex))
-                        Log.i("ContentUri", contentUri.toString())
-                        Log.i("----","----")
                     }
                 }
         return contentUri
     }
 
-    // Get the file from content URI and tags with MyID3 library
+    // Get the file from content URI. Copy it to app-specific file, and add metadata tags to app-specific file then overwrite Audio collection file.
     private fun tagMediaFile(context: Context, contentUri: Uri, songDetails: Song){
         val contentResolver = context.contentResolver
         val isPendingTrue = ContentValues().apply {
@@ -126,7 +118,7 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
         }
         contentResolver.update(contentUri, isPendingTrue, null, null)
 
-        val tempFile : File = File(context.externalCacheDir?.path + "/downloading/"+ songDetails.id+ ".mp3")
+        val tempFile = File(context.externalCacheDir?.path + "/downloading/"+ songDetails.id+ ".mp3")
         contentResolver.openInputStream(contentUri)?.use {
             inputStream -> tempFile.copyInputStreamToFile(inputStream)
         }
@@ -137,11 +129,12 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
             outputStream.write(tempFile.readBytes())
         }
 
+        tempFile.delete()
+
         val isPendingFalse = ContentValues().apply {
             this.put(MediaStore.Audio.Media.IS_PENDING, 0)
         }
         contentResolver.update(contentUri, isPendingFalse, null, null)
-
     }
 
     private fun File.copyInputStreamToFile(inputStream: InputStream?) {

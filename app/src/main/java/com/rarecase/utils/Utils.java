@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Environment;
 import android.os.Handler;
 import androidx.annotation.Nullable;
 import android.util.Log;
@@ -20,7 +19,6 @@ import org.cmc.music.myid3.MyID3;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,7 +44,7 @@ public class Utils {
             ByteBuffer buffer = ByteBuffer.allocate(imageSize);
             albumArt.copyPixelsToBuffer(buffer);
             buffer.rewind();
-            imageData = new ImageData(buffer.array(), "", "", 3);
+            imageData = new ImageData(buffer.array(), "image/png", "AlbumArt", 3);
         }
 
         try {
@@ -64,7 +62,7 @@ public class Utils {
             musicMetadata.setArtist(artists);
 
             if (imageData != null) {
-                musicMetadata.addPicture(imageData); // Doesn't work. Won't fix.
+                musicMetadata.addPicture(imageData); // Doesn't work (Probably due to original file being MP4 encoded). Won't fix.
             }
 
             id3.update(downloadedFile, musicMetadataSet, musicMetadata);

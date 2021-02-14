@@ -24,7 +24,7 @@ class SpringDownloadManager(val context: Context, val song : Song){
         return cacheManager.getCachedFromDownloadingFolder(song.id) != null
     }
 
-    fun enqueueSongDownload(mediaUrl : String, song: Song, destination : String){
+    fun enqueueSongDownload(mediaUrl : String, song: Song){
 
         val httpsMediaUrl = mediaUrl.replace("http://","https://") //Android Pie restriction: use https instead of cleartext HTTP URL.
         Log.i("SpringDownloadManager: ","Replaced http with https. Media URL:"+httpsMediaUrl)
@@ -33,7 +33,6 @@ class SpringDownloadManager(val context: Context, val song : Song){
         request.setTitle(song.song)
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
         request.setDescription(song.id)
-        //With scoped storage, this file should be accessible with Uri: content://media/audio/Spring/songName-songId.mp3
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_MUSIC, "Spring"+File.separator+Utils.contentUriFileName(song)+".mp3")
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         downloadManager.enqueue(request)
