@@ -1,6 +1,9 @@
 package com.rarecase.utils;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.content.pm.PermissionInfo;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -20,6 +23,7 @@ import org.cmc.music.myid3.MyID3;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.security.Permission;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,6 +94,11 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    public static boolean hasWritePermission(Context context){
+        PackageManager packageManager = context.getPackageManager();
+        return packageManager.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, context.getPackageName()) == PackageManager.PERMISSION_GRANTED
     }
 
     public static String RegexReplaceGroup(String targetString, String regexGroupPattern, String replaceValue) {

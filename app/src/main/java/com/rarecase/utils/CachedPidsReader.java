@@ -75,24 +75,4 @@ public class CachedPidsReader {
         }
         return pidsList;
     }
-
-    /**
-     * Checks if internal memory can be written to
-     * @return true if permission to write internal storage
-     */
-    public static boolean canWriteToStorage(){
-        File cacheDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Android/data/");
-        return cacheDir.canWrite();
-    }
-
-
-    /**
-     * Calculates usable free space. It needs to be more than 10 Mb to decrypt/download songs
-     * @return Usable free space in Mbs
-     */
-    public static long freeSpaceInMBs(){
-        long freeSpace = Environment.getExternalStorageDirectory().getUsableSpace();
-        return freeSpace/1048576;
-    }
-
 }
