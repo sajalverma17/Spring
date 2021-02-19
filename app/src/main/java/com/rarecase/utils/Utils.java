@@ -14,16 +14,26 @@ import android.widget.Toast;
 
 import com.rarecase.model.Song;
 
+/*
 import org.cmc.music.common.ID3WriteException;
 import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
+*/
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.FieldDataInvalidException;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.TagException;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.security.Permission;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,7 +49,7 @@ public class Utils {
      * @param song           The object containing info to be tagged
      * @param albumArt       The bitmap to be added as album art of the audio file of song.
      * @param downloadedFile The Uri to the untagged file downloaded. This will be file:// URI on android 9 and lower.
-     */
+
     public static void tagAudioFile(Song song, @Nullable Bitmap albumArt, File downloadedFile) {
 
         ImageData imageData = null;
@@ -74,6 +84,33 @@ public class Utils {
             Log.i("Utils", "Error tagging " + song.getSong() + " at " + downloadedFile.getAbsolutePath() + "\n" + e.getMessage());
         }
 
+    }
+     */
+
+    public static boolean tagAudioFileJAudioTagger(Song song, @Nullable Bitmap albumArt, File downloadedFile)
+    {
+        AudioFile audioFile;
+        try {
+            audioFile = AudioFileIO.read(downloadedFile);
+        } catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        Tag id3Tag = audioFile.getTagAndConvertOrCreateAndSetDefault();
+
+        try {
+            id3Tag.setField(FieldKey.TITLE, song.getSong());
+            id3Tag.setField(FieldKey.ALBUM, song.getAlbum());
+            String artists = song.getFeatured_artists().equals("") ? song.getPrimary_artists() : song.getPrimary_artists() + " ft. " + song.getFeatured_artists();
+            id3Tag.setField(FieldKey.ARTISTS, artists);
+        } catch (FieldDataInvalidException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        audioFile.setTag(id3Tag);
+        return true;
     }
 
     public static void showToastFromService(Handler uiHandler, final Context context, final String message) {

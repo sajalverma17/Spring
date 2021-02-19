@@ -49,16 +49,18 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
                     if (status == DownloadManager.STATUS_SUCCESSFUL) {
                         Log.i("DownloadComplete", "Download of ${songDetails?.song} successful")
 
-                        // Add ID3 tags on the file. On >= Android Q, tag temp file then update MediaStore content
                         if(songDetails != null) {
+
+                            // On >= Android Q, Add ID3 tags on temp file then overwrite downloaded file in Music MediaStore collection
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
                                 val contentUri = getContentUri(context.contentResolver, songDetails)
                                 tagMediaFile(context, contentUri, songDetails)
                             }
+
                             // On versions Android Pie and below, tag downloaded file directly (We have write access)
                             else {
                                 val fileURI = URI.create(fileURIString)
-                                Utils.tagAudioFile(songDetails, songDetails.albumArt, File(fileURI))
+                                Utils.tagAudioFileJAudioTagger(songDetails, songDetails.albumArt, File(fileURI))
                             }
                         }
                         Utils.showToastFromService(Handler(), context, "Finished downloading "+songDetails?.song)
@@ -123,7 +125,7 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
             inputStream -> tempFile.copyInputStreamToFile(inputStream)
         }
 
-        Utils.tagAudioFile(songDetails, songDetails.albumArt, tempFile)
+        Utils.tagAudioFileJAudioTagger(songDetails, songDetails.albumArt, tempFile)
 
         contentResolver.openOutputStream(contentUri, "w")?.use { outputStream ->
             outputStream.write(tempFile.readBytes())
