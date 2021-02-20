@@ -106,8 +106,23 @@ class SongCacheManager(val context : Context){
         return  bitmap
     }
 
+    fun getImageFile(album: String?) : File? {
+        val cachePath = context.externalCacheDir?.path + "/albumArts"
+        val cacheDir = File(cachePath)
+        cacheDir.mkdir()
+        val files = cacheDir.listFiles()
 
+        var imageFile : File? = null
+        if(files != null){
+            for (file in files){
+                if(file.nameWithoutExtension == album) {
+                    imageFile = File(cachePath+"/"+file.name)
+                }
+            }
+        }
 
+        return imageFile
+    }
 
 
     private fun setUpCache(pidType: PidType,clearSharedCache : Boolean = true): String {
