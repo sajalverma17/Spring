@@ -14,15 +14,10 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import com.rarecase.utils.SpringSharedPref;
-
-import net.rdrei.android.dirchooser.DirectoryChooserActivity;
-import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
 public class TabActivity extends AppCompatActivity {
 
-    private static final int DIRECTORY_PICKER_REQUEST_CODE = 139;
     static final int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 100;
     TabViewPagerAdapter tabViewPagerAdapter;
 
@@ -77,19 +72,6 @@ public class TabActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
-            case R.id.menu_storage_path:
-
-                final Intent chooserIntent = new Intent(this, DirectoryChooserActivity.class);
-                final DirectoryChooserConfig config = DirectoryChooserConfig.builder()
-                        .newDirectoryName("Spring")
-                        .allowReadOnlyDirectory(true)
-                        .allowNewDirectoryNameModification(true)
-                        .build();
-                chooserIntent.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
-                startActivityForResult(chooserIntent, DIRECTORY_PICKER_REQUEST_CODE);
-
-                break;
-
             case R.id.menu_item_run_demo_again:
 
                 SpringSharedPref pref = new SpringSharedPref(this);

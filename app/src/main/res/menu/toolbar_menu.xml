@@ -3,13 +3,6 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
 
     >
-
-    <item android:id="@+id/menu_storage_path"
-          android:title="@string/menu_set_storage_folder"
-          app:showAsAction="never"
-        />
-
-
     <item android:id="@+id/menu_item_run_demo_again"
           android:title="@string/menu_run_intro_again"
           app:showAsAction="never"
