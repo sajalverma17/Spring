@@ -21,19 +21,27 @@ import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 */
+import org.cmc.music.myid3.ID3Tag;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.AudioHeader;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
+import org.jaudiotagger.tag.id3.ID3v24FieldKey;
+import org.jaudiotagger.tag.mp4.Mp4FieldKey;
+import org.jaudiotagger.tag.mp4.Mp4Tag;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -91,25 +99,33 @@ public class Utils {
     {
         AudioFile audioFile;
         try {
-            audioFile = AudioFileIO.read(downloadedFile);
+            audioFile = AudioFileIO.readAs(downloadedFile, "mp4");
         } catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
             e.printStackTrace();
             return false;
         }
 
-        Tag id3Tag = audioFile.getTagAndConvertOrCreateAndSetDefault();
+        Tag id4Tag = audioFile.getTagAndConvertOrCreateAndSetDefault();
 
         try {
-            id3Tag.setField(FieldKey.TITLE, song.getSong());
-            id3Tag.setField(FieldKey.ALBUM, song.getAlbum());
+            id4Tag.setField(FieldKey.TITLE, song.getSong());
+            id4Tag.setField(FieldKey.ALBUM, song.getAlbum());
             String artists = song.getFeatured_artists().equals("") ? song.getPrimary_artists() : song.getPrimary_artists() + " ft. " + song.getFeatured_artists();
-            id3Tag.setField(FieldKey.ARTISTS, artists);
+            id4Tag.setField(FieldKey.ARTIST, artists);
         } catch (FieldDataInvalidException e) {
             e.printStackTrace();
             return false;
         }
 
-        audioFile.setTag(id3Tag);
+        audioFile.setTag(id4Tag);
+
+        try {
+            audioFile.commit();
+        } catch (CannotWriteException e) {
+            e.printStackTrace();
+            return false;
+        }
+
         return true;
     }
 
