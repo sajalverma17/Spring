@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 
 public class Utils {
 
-    public static boolean tagAudioFileJAudioTagger(Song song, @Nullable File albumArtFile, File downloadedFile)
+    public static boolean tagAudioFile(Song song, @Nullable File albumArtFile, File downloadedFile)
     {
         AudioFile audioFile;
         try {
@@ -55,8 +55,7 @@ public class Utils {
         // Try writing image data, catch exception but continue committing to the file, we don't care that much about this.
         if(albumArtFile != null) {
             try {
-                Artwork artwork = null;
-                artwork = ArtworkFactory.createArtworkFromFile(albumArtFile);
+                Artwork artwork = ArtworkFactory.createArtworkFromFile(albumArtFile);
                 artwork.setMimeType("image/png");
                 mp4Tag.setField(artwork);
             } catch (FieldDataInvalidException | IOException e) {

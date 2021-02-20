@@ -5,7 +5,6 @@ import android.content.*
 import android.net.Uri
 import android.os.Handler
 import android.provider.MediaStore
-import android.provider.MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
 import android.util.Log
 import com.rarecase.model.Song
 import com.rarecase.model.SongCacheManager
@@ -54,14 +53,13 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
                             // On >= Android Q, Add ID3 tags on temp file then overwrite downloaded file in Music MediaStore collection
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
                                 val contentUri = getContentUri(context.contentResolver, songDetails)
-
                                 tagMediaFile(context, contentUri, songDetails)
                             }
 
                             // On versions Android Pie and below, tag downloaded file directly (We have write access)
                             else {
                                 val fileURI = URI.create(fileURIString)
-                                Utils.tagAudioFileJAudioTagger(songDetails, getSongImageFile(context, songDetails) , File(fileURI))
+                                Utils.tagAudioFile(songDetails, getSongImageFile(context, songDetails) , File(fileURI))
                             }
                         }
                         Utils.showToastFromService(Handler(), context, "Finished downloading "+songDetails?.song)
@@ -116,7 +114,7 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
             inputStream -> tempFile.copyInputStreamToFile(inputStream)
         }
 
-        Utils.tagAudioFileJAudioTagger(songDetails, getSongImageFile(context, songDetails), tempFile)
+        Utils.tagAudioFile(songDetails, getSongImageFile(context, songDetails), tempFile)
 
         contentResolver.openOutputStream(contentUri, "w")?.use { outputStream ->
             outputStream.write(tempFile.readBytes())
