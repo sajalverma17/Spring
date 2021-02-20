@@ -3,77 +3,76 @@ package com.rarecase.utils;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.pm.PermissionInfo;
-import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import androidx.annotation.Nullable;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.rarecase.model.Song;
-
-import org.cmc.music.common.ID3WriteException;
-import org.cmc.music.metadata.ImageData;
-import org.cmc.music.metadata.MusicMetadata;
-import org.cmc.music.metadata.MusicMetadataSet;
-import org.cmc.music.myid3.MyID3;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.CannotWriteException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.FieldDataInvalidException;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.TagException;
+import org.jaudiotagger.tag.images.Artwork;
+import org.jaudiotagger.tag.images.ArtworkFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.security.Permission;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utils {
 
-    /**
-     * Adds ID3 tags to .mp3 files decrypted/downloaded
-     * as a result of a Spring action performed successfully
-     * <p>
-     * The untagged files just dercypted/downloaded are saved
-     * in storage directory with the name {song}-{pid}.mp3
-     *
-     * @param song           The object containing info to be tagged
-     * @param albumArt       The bitmap to be added as album art of the audio file of song.
-     * @param downloadedFile The Uri to the untagged file downloaded. This will be file:// URI on android 9 and lower.
-     */
-    public static void tagAudioFile(Song song, @Nullable Bitmap albumArt, File downloadedFile) {
-
-        ImageData imageData = null;
-        if (albumArt != null) {
-            int imageSize = albumArt.getRowBytes() * albumArt.getHeight();
-            ByteBuffer buffer = ByteBuffer.allocate(imageSize);
-            albumArt.copyPixelsToBuffer(buffer);
-            buffer.rewind();
-            imageData = new ImageData(buffer.array(), "image/png", "AlbumArt", 3);
+    public static boolean tagAudioFile(Song song, @Nullable File albumArtFile, File downloadedFile)
+    {
+        AudioFile audioFile;
+        try {
+            audioFile = AudioFileIO.readAs(downloadedFile, "mp4");
+        } catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
+            e.printStackTrace();
+            return false;
         }
+        Tag mp4Tag = audioFile.getTagAndConvertOrCreateAndSetDefault();
+
+        // Write text fields
+        try {
+            mp4Tag.setField(FieldKey.TITLE, song.getSong());
+            mp4Tag.setField(FieldKey.ALBUM, song.getAlbum());
+            String artists = song.getFeatured_artists().equals("") ? song.getPrimary_artists() : song.getPrimary_artists() + " ft. " + song.getFeatured_artists();
+            mp4Tag.setField(FieldKey.ARTIST, artists);
+        } catch (FieldDataInvalidException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        // Try writing image data, catch exception but continue committing to the file, we don't care that much about this.
+        if(albumArtFile != null) {
+            try {
+                Artwork artwork = ArtworkFactory.createArtworkFromFile(albumArtFile);
+                artwork.setMimeType("image/png");
+                mp4Tag.setField(artwork);
+            } catch (FieldDataInvalidException | IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        audioFile.setTag(mp4Tag);
 
         try {
-            MyID3 id3 = new MyID3();
-            MusicMetadataSet musicMetadataSet = id3.read(downloadedFile);
-            MusicMetadata musicMetadata = musicMetadataSet.id3v2Clean;
-            //Decrypted file will have null musicMetaData
-            if (musicMetadata == null) {
-                musicMetadata = MusicMetadata.createEmptyMetadata();
-            }
-
-            musicMetadata.setSongTitle(song.getSong());
-            musicMetadata.setAlbum(song.getAlbum());
-            String artists = song.getFeatured_artists().equals("") ? song.getPrimary_artists() : song.getPrimary_artists() + " ft. " + song.getFeatured_artists();
-            musicMetadata.setArtist(artists);
-
-            if (imageData != null) {
-                musicMetadata.addPicture(imageData); // Doesn't work (Probably due to original file being MP4 encoded). Won't fix.
-            }
-
-            id3.update(downloadedFile, musicMetadataSet, musicMetadata);
-        } catch (IOException | ID3WriteException e) {
-            Log.i("Utils", "Error tagging " + song.getSong() + " at " + downloadedFile.getAbsolutePath() + "\n" + e.getMessage());
+            audioFile.commit();
+        } catch (CannotWriteException e) {
+            e.printStackTrace();
+            return false;
         }
 
+        return true;
     }
 
     public static void showToastFromService(Handler uiHandler, final Context context, final String message) {

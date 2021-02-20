@@ -5,7 +5,6 @@ import android.content.*
 import android.net.Uri
 import android.os.Handler
 import android.provider.MediaStore
-import android.provider.MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
 import android.util.Log
 import com.rarecase.model.Song
 import com.rarecase.model.SongCacheManager
@@ -49,16 +48,18 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
                     if (status == DownloadManager.STATUS_SUCCESSFUL) {
                         Log.i("DownloadComplete", "Download of ${songDetails?.song} successful")
 
-                        // Add ID3 tags on the file. On >= Android Q, tag temp file then update MediaStore content
                         if(songDetails != null) {
+
+                            // On >= Android Q, Add ID3 tags on temp file then overwrite downloaded file in Music MediaStore collection
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
                                 val contentUri = getContentUri(context.contentResolver, songDetails)
                                 tagMediaFile(context, contentUri, songDetails)
                             }
+
                             // On versions Android Pie and below, tag downloaded file directly (We have write access)
                             else {
                                 val fileURI = URI.create(fileURIString)
-                                Utils.tagAudioFile(songDetails, songDetails.albumArt, File(fileURI))
+                                Utils.tagAudioFile(songDetails, getSongImageFile(context, songDetails) , File(fileURI))
                             }
                         }
                         Utils.showToastFromService(Handler(), context, "Finished downloading "+songDetails?.song)
@@ -71,16 +72,6 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
                 cursor.close()
             }
         }
-    }
-    private fun getSongDetails(context : Context?, pid : String) : Song? {
-        val songCacheManager = SongCacheManager(context!!)
-        val song = songCacheManager.getCachedFromDownloadingFolder(pid)
-        song?.albumArt = songCacheManager.getImage(song?.album)
-        return song
-    }
-
-    private fun removeSongDetailsFromCache(context: Context?, pid : String) {
-        SongCacheManager(context!!).deleteCachedFromDownloadingFolder(pid)
     }
 
     // Android Q and above: Access file from audio collection
@@ -123,7 +114,7 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
             inputStream -> tempFile.copyInputStreamToFile(inputStream)
         }
 
-        Utils.tagAudioFile(songDetails, songDetails.albumArt, tempFile)
+        Utils.tagAudioFile(songDetails, getSongImageFile(context, songDetails), tempFile)
 
         contentResolver.openOutputStream(contentUri, "w")?.use { outputStream ->
             outputStream.write(tempFile.readBytes())
@@ -141,6 +132,21 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
         this.outputStream().use { fileOut ->
             inputStream?.copyTo(fileOut)
         }
+    }
+
+    private fun getSongDetails(context : Context?, pid : String) : Song? {
+        val songCacheManager = SongCacheManager(context!!)
+        val song = songCacheManager.getCachedFromDownloadingFolder(pid)
+        song?.albumArt = songCacheManager.getImage(song?.album)
+        return song
+    }
+
+    private fun getSongImageFile(context: Context?, songDetails: Song): File?{
+        return SongCacheManager(context!!).getImageFile(songDetails.album);
+    }
+
+    private fun removeSongDetailsFromCache(context: Context?, pid : String) {
+        SongCacheManager(context!!).deleteCachedFromDownloadingFolder(pid)
     }
 
 }
