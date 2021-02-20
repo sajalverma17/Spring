@@ -32,9 +32,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity"
-            android:theme="@style/DirectoryChooserTheme"/>
-        <activity
             android:name=".DownloaderActivity"
             android:label="@string/downloadLabel"
             android:theme="@style/AppTheme">
