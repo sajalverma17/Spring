@@ -16,6 +16,7 @@ import com.rarecase.spring.R;
 import com.rarecase.spring.TabActivity;
 import com.rarecase.utils.CachedPidsReader;
 import com.rarecase.utils.SortingHelper;
+import com.rarecase.utils.Utils;
 
 import java.net.URL;
 import java.util.List;
@@ -59,11 +60,14 @@ public class SongListPresenter implements ISongListPresenter, Observer {
     @Override
     public void loadOfflineSongs() {
 
-        if(!CachedPidsReader.canReadInternalStorage()){
-            _view.requestStoragePermission();
-        }else if(!CachedPidsReader.pidsExist()){
+        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.Q) {
+            if (!Utils.hasWritePermission(_context)) {
+                _view.requestStoragePermission();
+                return;
+            }
+        }
+        if(!CachedPidsReader.pidsExist()){
             _view.showErrorPopulatingSongs(_context.getString(R.string.ghost_image_zero_songs_saved_offline));
-            //_view.showSnackbar(_context.getString(R.string.zero_songs_saved_offline));
         }else {
             //Found cached encrypted song directory with one or more mp3 files.
             pids = CachedPidsReader.getCachedPids();

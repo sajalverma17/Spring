@@ -45,7 +45,9 @@ public class TabActivity extends AppCompatActivity {
         mPager.setAdapter(tabViewPagerAdapter);
 
         tabLayout.setupWithViewPager(mPager);
-        requestStoragePermission();
+        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.Q) {
+            requestStoragePermission();
+        }
     }
 
     @Override
