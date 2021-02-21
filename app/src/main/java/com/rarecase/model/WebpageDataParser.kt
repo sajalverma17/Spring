@@ -44,9 +44,10 @@ class WebpageDataParser(url: String) {
 
 
         /*
-        Pids can be in different places in the JSON based on the page type (song/album/playlist)
+        Pids can be in different places in the JSON based on the page type (song/album/featured).
+        Playlist usually end up as named featured in the redirected URL
         */
-        var pagetype : PageType = PageType.Song
+        var pagetype : PageType = PageType.Unsupported
         when {
             _url.startsWith("https://www.jiosaavn.com/song/") -> {
                 // Song json, there should be a song json element
@@ -58,6 +59,11 @@ class WebpageDataParser(url: String) {
             _url.startsWith(("https://www.jiosaavn.com/featured")) -> {
                 pagetype = PageType.Featured
             }
+
+            else -> {
+                throw UnknownItemSharedException("Shared something other than song/album/featured: $_url");
+            }
+
         }
 
         return WebpageJsonParser(pagetype).getSongJsonElements(sanitiseJson(pageJson))
@@ -75,7 +81,7 @@ class WebpageDataParser(url: String) {
 enum class PageType {
     Song,
     Album,
-
     // Featured playlist for a user
-    Featured
+    Featured,
+    Unsupported,
 }

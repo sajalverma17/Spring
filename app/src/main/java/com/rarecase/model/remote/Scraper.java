@@ -4,9 +4,14 @@ package com.rarecase.model.remote;
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.util.MalformedJsonException;
+import android.util.Pair;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import com.rarecase.model.Song;
+import com.rarecase.model.UnknownItemSharedException;
 import com.rarecase.model.json.SongJsonParser;
 import com.rarecase.model.WebpageDataParser;
 import com.rarecase.utils.HttpHelper;
@@ -21,7 +26,6 @@ import java.util.Observer;
 
 /**
  * Class to scrape web page asynchronously.
- * TODO: Handle invalid JSON exception. Also, Scraper doesn't capture HttpHelper's network error codes (strings) OnPostExecute methods
  *
  */
 
@@ -39,6 +43,7 @@ public class Scraper extends Observable{
         super.addObserver(o);
     }
 
+    @SuppressLint("StaticFieldLeak")
     public void getRedirectURL()
     {
         new AsyncTask<String, Void, URL>() {
@@ -71,23 +76,35 @@ public class Scraper extends Observable{
     }
 
     /**
-     * Gets the pids from webpage and notifies the SongListPresenter in the update method
+     * Gets the pids from web page and notifies the SongListPresenter in the update method
      * In update, presenter loads song details using pids and displays the list in view
      */
+    @SuppressLint("StaticFieldLeak")
     public void scrapeForPidsAsync() {
 
-        new AsyncTask<String, Void, List<String>>() {
+        new AsyncTask<String, Void, Pair<String,List<String>>>() {
             @Override
-            protected List<String> doInBackground(String... params) {
+            protected Pair<String, List<String>> doInBackground(String... params) {
                 List<String> pids;
+                List<JsonElement> songJsonElementsInPage;
                 Log.i("Scraper", "URL to scrape for Pids:"+_url);
+
                 try {
                     WebpageDataParser webPageParser = new WebpageDataParser(_url);
-                    List<JsonElement> songJsonElementsInPage = webPageParser.getSongJsonElements();
+                    songJsonElementsInPage = webPageParser.getSongJsonElements();
+                }
+                catch (UnknownItemSharedException e){
+                    Log.i("Scraper",""+e.getMessage());
+                    return new Pair<>("UIS", null);
+                }
+                catch (JsonParseException e){
+                    Log.i("Scraper", "Error de-serializing json of page: "+e.getMessage());
+                    return new Pair<>("UNK", null);
+                }
 
+                try{
                     List<Song> tempList = new ArrayList<Song>();
-                    for (JsonElement songJson :
-                            songJsonElementsInPage) {
+                    for (JsonElement songJson : songJsonElementsInPage) {
                         SongJsonParser jsonParser = new SongJsonParser();
                         Song song = jsonParser.getSong(songJson.toString());
                         tempList.add(song);
@@ -97,22 +114,24 @@ public class Scraper extends Observable{
                     for (Song s : tempList) {
                         pids.add(s.getId());
                     }
-                    Log.i("Scraper",pids.toString());
-                } catch (Exception e) {
-                    Log.i("Scraper:", "Exception parsing using JSoup "+e.getMessage());
-                    return null;
+                    Log.i("Scraper","Output from web scraping: "+pids.toString());
                 }
-                return pids;
+                catch (JsonParseException e){
+                    Log.i("Scraper", "Error de-serializing song json element:"+e.getMessage());
+                    return new Pair<>("UNK", null);
+                }
+
+                return new Pair<>(null, pids);
             }
+
             @Override
-            protected void onPostExecute(List<String> pids){
-                Log.i("Scraper","Output from web scraping: "+pids);
+            protected void onPostExecute(Pair<String, List<String>> errorOrPids){
                 setChanged();
-                if(pids == null) {
-                    notifyObservers("UNK");
+                if(errorOrPids.first != null) {
+                    notifyObservers(errorOrPids.first);
                 }
                 else {
-                    notifyObservers(pids);
+                    notifyObservers(errorOrPids.second);
                 }
             }
         }.execute();

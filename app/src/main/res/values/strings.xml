@@ -26,8 +26,6 @@
 
     <string name="you_are_offline">You\'re offline</string>
     <string name="unavailable_song">The song is unavailable for download</string>
-
-    <string name="only_songs_albums_playlists">Whoa! Spring can\'t handle this!</string>
     <string name="error_processing_link">There was an error processing this</string>
     <string name="unable_to_find_offline_songs">Spring is unable to find songs saved offline</string>
 
@@ -37,11 +35,12 @@
     <string name="ghost_image_no_songs_shared_yet">Share a song, album or a playlist with Spring and it will pop up here for you to download anytime.</string>
     <string name="no_songs_shared_yet">You haven\'t shared anything with Spring yet</string>
 
-    <string name="generic_network_error">There was an error with the network</string>
+    <string name="unsupported_item_shared">Spring does not support what you shared.</string>
+    <string name="generic_error">There was an error</string>
     <string name="network_too_slow">Network is too slow.</string>
     <string name="unable_to_connect">Oops! Unable to reach the server.</string>
     <string name="rejected_by_server">Ouch! Server rejected the request. Retry later.</string>
-    <string name="parsing_exception">Whoops! Spring is unable to handle what you shared.</string>
+    <string name="parsing_exception">Whoops! Spring is unable to process what you shared.</string>
 
 
     <string name="slide_1_title">Spring</string>

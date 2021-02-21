@@ -2,6 +2,8 @@ package com.rarecase.presenter.presenters;
 
 
 import android.content.Context;
+import android.util.Log;
+
 import androidx.fragment.app.Fragment;
 
 import com.rarecase.model.PidType;
@@ -86,8 +88,11 @@ public class SongListPresenter implements ISongListPresenter, Observer {
 
                 Callable retryAction = new retryCall(o);
 
-                _view.showErrorPopulatingSongs(_context.getString(R.string.generic_network_error));
+                _view.showErrorPopulatingSongs(_context.getString(R.string.generic_error));
 
+                if(error.equals("UIS")){
+                    _view.showSnackbar(_context.getString(R.string.unsupported_item_shared));
+                }
                 if (error.equals("STE")) {
                     _view.showSnackbarWithAction(_context.getString(R.string.network_too_slow),_context.getString(R.string.retry),retryAction);
                 }
@@ -134,12 +139,7 @@ public class SongListPresenter implements ISongListPresenter, Observer {
      * @param stringExtra
      */
     public void processStringExtra(String stringExtra){
-
-        String trimmedStringExtra = stringExtra.substring(14, stringExtra.length());
-        if( trimmedStringExtra.startsWith(_context.getString(R.string.albumString))
-                || trimmedStringExtra.startsWith(_context.getString(R.string.songString))
-                || trimmedStringExtra.startsWith(_context.getString(R.string.playlistString)))
-        {
+        Log.i("Processing shared item:", stringExtra);
             Pattern pattern = Pattern.compile(".*(http.*)");
             Matcher matcher = pattern.matcher(stringExtra);
             if(matcher.find()){
@@ -148,9 +148,6 @@ public class SongListPresenter implements ISongListPresenter, Observer {
             } else {
                 _view.showSnackbar(_context.getString(R.string.error_processing_link));
             }
-        } else {
-            _view.showSnackbar(_context.getString(R.string.only_songs_albums_playlists));
-        }
     }
 
     /**
