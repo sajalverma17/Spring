@@ -99,7 +99,7 @@ public class Scraper extends Observable{
                 }
                 catch (JsonParseException e){
                     Log.i("Scraper", "Error de-serializing json of page: "+e.getMessage());
-                    return new Pair<>("UNK", null);
+                    return new Pair<>("PAR", null);
                 }
 
                 try{
@@ -118,7 +118,7 @@ public class Scraper extends Observable{
                 }
                 catch (JsonParseException e){
                     Log.i("Scraper", "Error de-serializing song json element:"+e.getMessage());
-                    return new Pair<>("UNK", null);
+                    return new Pair<>("PAR", null);
                 }
 
                 return new Pair<>(null, pids);

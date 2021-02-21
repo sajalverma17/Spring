@@ -36,11 +36,13 @@
     <string name="no_songs_shared_yet">You haven\'t shared anything with Spring yet</string>
 
     <string name="unsupported_item_shared">Spring does not support what you shared.</string>
-    <string name="generic_error">There was an error</string>
+    <string name="generic_error">There was an error. This could be a network issue, or something at our end, but we weren\'t able to determine it</string>
     <string name="network_too_slow">Network is too slow.</string>
     <string name="unable_to_connect">Oops! Unable to reach the server.</string>
     <string name="rejected_by_server">Ouch! Server rejected the request. Retry later.</string>
     <string name="parsing_exception">Whoops! Spring is unable to process what you shared.</string>
+    <string name="unexpected_json_please_report">Error! This was unexpected, and we would be absolutely stoked if you reach out and let us know what you shared with Spring that led to this error.</string>
+    <string name="unexpected_url_please_report">Spring can only process songs, albums or playlists. But if that is what you shared, we would be happy to fix this if you could reach out to us.</string>
 
 
     <string name="slide_1_title">Spring</string>

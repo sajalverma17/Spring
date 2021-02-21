@@ -88,10 +88,18 @@ public class SongListPresenter implements ISongListPresenter, Observer {
 
                 Callable retryAction = new retryCall(o);
 
-                _view.showErrorPopulatingSongs(_context.getString(R.string.generic_error));
-
                 if(error.equals("UIS")){
                     _view.showSnackbar(_context.getString(R.string.unsupported_item_shared));
+                    _view.showErrorPopulatingSongs(_context.getString(R.string.unexpected_url_please_report));
+                    return;
+                }
+                if(error.equals("PAR")){
+                    _view.showSnackbar(_context.getString(R.string.parsing_exception));
+
+                    // A parsing exception means that a song/album/playlist shared (things we support for download)
+                    // but the json data was not what Spring expected, and some rules of parsing might need update, extenstion
+                    _view.showErrorPopulatingSongs(_context.getString(R.string.unexpected_json_please_report));
+                    return;
                 }
                 if (error.equals("STE")) {
                     _view.showSnackbarWithAction(_context.getString(R.string.network_too_slow),_context.getString(R.string.retry),retryAction);
@@ -102,9 +110,9 @@ public class SongListPresenter implements ISongListPresenter, Observer {
                 if (error.equals("503")) {
                     _view.showSnackbarWithAction(_context.getString(R.string.rejected_by_server),_context.getString(R.string.retry),retryAction);
                 }
-                if(error.equals("UNK")){
-                    _view.showSnackbar(_context.getString(R.string.parsing_exception));
-                }
+
+                _view.showErrorPopulatingSongs(_context.getString(R.string.generic_error));
+
             } else if (arg instanceof List) {
                 if(o instanceof SongListRepository) {
                     List<Song> songList = (List<Song>) arg;
