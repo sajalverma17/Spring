@@ -78,7 +78,9 @@ public class TabActivity extends AppCompatActivity {
 
                 SpringSharedPref pref = new SpringSharedPref(this);
                 pref.setFirstTime(true);
-                startActivity(new Intent(this, WelcomeActivity.class));
+                Intent welcomeIntent = new Intent(this, WelcomeActivity.class);
+                finish();
+                startActivity(welcomeIntent);
 
                 break;
         }
