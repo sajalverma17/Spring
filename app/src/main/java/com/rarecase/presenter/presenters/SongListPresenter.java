@@ -46,9 +46,9 @@ public class SongListPresenter implements ISongListPresenter, Observer {
             List<Fragment> fragments = tabActivity.getSupportFragmentManager().getFragments();
 
             if(view instanceof HomeActivity)
-                _view = (ISongListView) fragments.get(0);
-            else
                 _view = (ISongListView) fragments.get(1);
+            else
+                _view = (ISongListView) fragments.get(0);
         }
         else
         {

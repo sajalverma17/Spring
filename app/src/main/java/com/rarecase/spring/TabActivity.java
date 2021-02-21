@@ -40,8 +40,8 @@ public class TabActivity extends AppCompatActivity {
         Fragment lastSharedSongsFragment = new SharedSongListActivity();
 
         tabViewPagerAdapter = new TabViewPagerAdapter(getSupportFragmentManager());
-        tabViewPagerAdapter.addFragment(offLineSongsFragment,"Offline");
         tabViewPagerAdapter.addFragment(lastSharedSongsFragment,"Recently Shared");
+        tabViewPagerAdapter.addFragment(offLineSongsFragment,"Offline");
         mPager.setAdapter(tabViewPagerAdapter);
 
         tabLayout.setupWithViewPager(mPager);

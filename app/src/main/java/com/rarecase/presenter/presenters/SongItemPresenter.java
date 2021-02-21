@@ -40,9 +40,9 @@ public class SongItemPresenter implements ISongItemPresenter,Observer{
         if (context instanceof TabActivity) {
                 TabActivity a =  (TabActivity) context;
                 List<Fragment> listViews = a.getSupportFragmentManager().getFragments();
-            if(_itemView.getViewPidType() == PidType.Offline)
+            if(_itemView.getViewPidType() == PidType.Shared)
                 _listView = (ISongListView) listViews.get(0);
-            else if (_itemView.getViewPidType() == PidType.Shared)
+            else if (_itemView.getViewPidType() == PidType.Offline)
                 _listView = (ISongListView) listViews.get(1);
         }
         //Else it is an Activity
