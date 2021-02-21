@@ -60,6 +60,12 @@ class WebpageDataParser(url: String) {
                 pagetype = PageType.Featured
             }
 
+            // I haven't seen this in testing, feels likely that there is a "playlist" url that might get us playlists
+            // with the same JSON parsing logic as PageType.Featured
+            _url.startsWith(("https://www.jiosaavn.com/playlist")) -> {
+                pagetype = PageType.Featured
+            }
+
             else -> {
                 throw UnknownItemSharedException("Shared something other than song/album/featured: $_url");
             }
