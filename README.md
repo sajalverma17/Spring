@@ -1,7 +1,5 @@
 # Spring
 
-NB! This app is take down by Google Play Store as usage of embedded native code (.so library embedded in this app) is not allowed by Google since Aug 2019. I abandoned the project years ago, now I am starting to get this app back in shape to deploy on Play Store, and help by newbies is highly appreciated, just comment on the open issues :)
-
 Spring is an Android app that breaks the subscription system of an Indian music streaming service, allowing anyone to download any song without subscription or decrypt the songs that were saved for offline listening by subscribed users.
 
 Uses client-side decryption combined with some web-scraping to exploit a vulnerability.   
