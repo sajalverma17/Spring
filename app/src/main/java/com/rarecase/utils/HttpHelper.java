@@ -73,7 +73,7 @@ public class HttpHelper {
             if(e.getMessage().contains("Got response code 503")) {
                 return "503";
             }else {
-                return "UNK";
+                return "GNE";
             }
         } finally {
             if (is != null) {
@@ -111,7 +111,7 @@ public class HttpHelper {
             if(e.getMessage().contains("Got response code 503")) {
                 return "503";
             }else {
-                return "UNK";
+                return "GNE";
             }
         }
         return null;

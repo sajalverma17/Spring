@@ -18,6 +18,7 @@ import com.rarecase.utils.HttpHelper;
 
 import org.jsoup.nodes.Element;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,30 +47,37 @@ public class Scraper extends Observable{
     @SuppressLint("StaticFieldLeak")
     public void getRedirectURL()
     {
-        new AsyncTask<String, Void, URL>() {
+        new AsyncTask<String, Void, Pair<String, URL>>() {
             @Override
-            protected URL doInBackground(String... params) {
-                URL redirectURL = null;
+            protected Pair<String, URL> doInBackground(String... params) {
                 Log.i("Scraper","URL to redirect:"+_url);
+                URL redirectURL;
+
+                String urlString = HttpHelper.getRedirectURL(_url);
+
                 try {
-                    String urlString = HttpHelper.getRedirectURL(_url);
                     redirectURL = new URL(urlString);
-                } catch (Exception e) {
+                } catch (MalformedURLException e) {
                     Log.i("Scraper:", "Exception getting redirect URL: "+e.getMessage());
-                    return null;
+                    return new Pair<>(urlString, null);
                 }
-                return redirectURL;
+                return new Pair<>(null, redirectURL);
             }
 
             @Override
-            protected void onPostExecute(URL redirectedURL){
-                Log.i("Scraper","Got redirected URL: "+redirectedURL);
+            protected void onPostExecute(Pair<String, URL> errorOrRedirectedURL){
                 setChanged();
-                if(redirectedURL == null) {
-                    notifyObservers("UNK");
+                if(errorOrRedirectedURL.first != null) {
+                    notifyObservers("");
                 }
-                else {
-                    notifyObservers(redirectedURL);
+                else if(errorOrRedirectedURL.second != null){
+                    Log.i("Scraper","Got redirected URL: "+errorOrRedirectedURL.second);
+                    notifyObservers(errorOrRedirectedURL.second);
+                }
+
+                // Shouldn't happen, but never tested in bad networks, so not sure of networking code.
+                else{
+                    notifyObservers("UNK");
                 }
             }
         }.execute();

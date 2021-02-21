@@ -94,12 +94,14 @@ public class SongListPresenter implements ISongListPresenter, Observer {
                     return;
                 }
                 if(error.equals("PAR")){
-                    _view.showSnackbar(_context.getString(R.string.parsing_exception));
-
                     // A parsing exception means that a song/album/playlist shared (things we support for download)
                     // but the json data was not what Spring expected, and some rules of parsing might need update, extenstion
+                    _view.showSnackbar(_context.getString(R.string.parsing_exception));
                     _view.showErrorPopulatingSongs(_context.getString(R.string.unexpected_json_please_report));
                     return;
+                }
+                if(error.equals("GNE")){
+                    _view.showSnackbarWithAction(_context.getString(R.string.generic_network_error), _context.getString(R.string.retry), retryAction);
                 }
                 if (error.equals("STE")) {
                     _view.showSnackbarWithAction(_context.getString(R.string.network_too_slow),_context.getString(R.string.retry),retryAction);
@@ -111,6 +113,7 @@ public class SongListPresenter implements ISongListPresenter, Observer {
                     _view.showSnackbarWithAction(_context.getString(R.string.rejected_by_server),_context.getString(R.string.retry),retryAction);
                 }
 
+                // This is for a "UNK" error code to handle, we minimized returning this error code to only when we are not sure
                 _view.showErrorPopulatingSongs(_context.getString(R.string.generic_error));
 
             } else if (arg instanceof List) {
