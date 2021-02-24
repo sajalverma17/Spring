@@ -8,7 +8,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "buildRelease"
+  # This workflow contains two jobs called "buildRelease" and "verifyRelease"
   buildRelease:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -27,17 +27,17 @@ jobs:
       # Build the release apk
       - name: Build the app
         run: ./gradlew assembleRelease
-
-      - name: Add permission to execute zipalign
-        run: chmod +x ./tools/zipalign.exe
+      
+      # Download zip align
+      - name: Install zipalign
+        run: sudo apt-get install -y zipalign
 
       # Verify the release apk alignment
       - name: Verify apk alignment
-        run: ./tools/zipalign.exe -c -v -p 4 app/build/outputs/apk/release/app-release-unsigned.apk
+        run: zipalign -c -v -p 4 app/build/outputs/apk/release/app-release-unsigned.apk
 
       # Upload release artifact
       - uses: actions/upload-artifact@v2
         with:
           name: app-release-unsigned.apk
           path: app/build/outputs/apk/release/
-
