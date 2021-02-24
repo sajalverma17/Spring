@@ -1,4 +1,4 @@
-name: buildRelease
+name: Build Release
 
 # Controls when the action will run.  
 on:
@@ -24,9 +24,16 @@ jobs:
       - name: Clean
         run: ./gradlew clean
 
-      # Build the release app
+      # Build the release apk
       - name: Build the app
         run: ./gradlew assembleRelease
+
+      - name: Add permission to execute zipalign
+        run: chmod +x ./tools/zipalign.exe
+
+      # Verify the release apk alignment
+      - name: Verify apk alignment
+        run: ./tools/zipalign.exe -c -v -p 4 app/build/outputs/apk/release/app-release-unsigned.apk
 
       # Upload release artifact
       - uses: actions/upload-artifact@v2
