@@ -19,7 +19,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <!-- Toolbar(replacing ActionBar) Theme for HomeActivity-->
+    <!-- Toolbar(replacing ActionBar)-->
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

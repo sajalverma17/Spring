@@ -127,8 +127,6 @@ class SongCacheManager(val context : Context){
 
     private fun setUpCache(pidType: PidType,clearSharedCache : Boolean = true): String {
             var cachePath = ""
-            if (pidType == PidType.Offline)
-                cachePath = context.externalCacheDir?.path + "/offline"
             if (pidType == PidType.Shared)
                 cachePath = context.externalCacheDir?.path + "/shared"
             if (pidType == PidType.Downloading)

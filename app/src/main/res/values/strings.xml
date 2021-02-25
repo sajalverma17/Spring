@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Spring</string>
-    <string name="title_activity_home">HomeActivity</string>
     <string name="next">NEXT</string>
     <string name="skip">SKIP</string>
     <string name="gotit">GOT IT!</string>
@@ -56,7 +55,7 @@
     <string name="slide_2_desc">Click on the share button of a playlist, album or a song…</string>
 
     <string name="slide_3_title">""</string>
-    <string name="slide_3_desc">scroll to the right and share it with Spring to start downloading</string>
+    <string name="slide_3_desc">…share with Spring to start downloading. It\'s that simple!</string>
 
     <string name="slide_4_title">Decrypt songs</string>
     <string name="slide_4_desc">Spring can also decrypt songs you saved offline, so you can play them in any other music player!</string>

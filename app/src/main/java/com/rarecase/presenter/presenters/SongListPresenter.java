@@ -12,14 +12,9 @@ import com.rarecase.model.remote.Scraper;
 import com.rarecase.model.remote.SongListRepository;
 import com.rarecase.presenter.contracts.ISongListPresenter;
 import com.rarecase.spring.DownloaderActivity;
-import com.rarecase.spring.HomeActivity;
 import com.rarecase.spring.ISongListView;
 import com.rarecase.spring.R;
 import com.rarecase.spring.TabActivity;
-import com.rarecase.utils.CachedPidsReader;
-import com.rarecase.utils.SortingHelper;
-import com.rarecase.utils.Utils;
-
 import java.net.URL;
 import java.util.List;
 import java.util.Observable;
@@ -46,11 +41,7 @@ public class SongListPresenter implements ISongListPresenter, Observer {
         {
             TabActivity tabActivity = (TabActivity) context;
             List<Fragment> fragments = tabActivity.getSupportFragmentManager().getFragments();
-
-            if(view instanceof HomeActivity)
-                _view = (ISongListView) fragments.get(1);
-            else
-                _view = (ISongListView) fragments.get(0);
+            _view = (ISongListView) fragments.get(0);
         }
         else
         {
@@ -59,23 +50,11 @@ public class SongListPresenter implements ISongListPresenter, Observer {
         _context = context; //Passed to Repository to access Cache
     }
 
+    /**
+     * Does nothing, as the SharedSongListPresenter loads the songs recently shared.
+     */
     @Override
     public void loadOfflineSongs() {
-
-        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.Q) {
-            if (!Utils.hasWritePermission(_context)) {
-                _view.requestStoragePermission();
-                return;
-            }
-        }
-        if(!CachedPidsReader.pidsExist()){
-            _view.showErrorPopulatingSongs(_context.getString(R.string.ghost_image_zero_songs_saved_offline));
-        }else {
-            //Found cached encrypted song directory with one or more mp3 files.
-            pids = CachedPidsReader.getCachedPids();
-            //Offline downloaded songs by user found.  This call is from HomeActivity
-            loadSongDetails(pids, PidType.Offline);
-        }
     }
 
     @Override
@@ -119,10 +98,6 @@ public class SongListPresenter implements ISongListPresenter, Observer {
             } else if (arg instanceof List) {
                 if(o instanceof SongListRepository) {
                     List<Song> songList = (List<Song>) arg;
-                    if(_view instanceof HomeActivity) {
-                        //Sorting
-                        songList = SortingHelper.quickSort(songList, 0, songList.size() - 1);
-                    }
                     _view.setSongList(songList);
                 }
                 //Output from scraper - This call is for DownloadActivity.
@@ -205,8 +180,6 @@ public class SongListPresenter implements ISongListPresenter, Observer {
 
         retryCall(Object sourceInstance){
 
-            if(_view instanceof HomeActivity)
-                _pidType = PidType.Offline;
             if(_view instanceof DownloaderActivity)
                 _pidType = PidType.Shared;
             _sourceInstance = sourceInstance;

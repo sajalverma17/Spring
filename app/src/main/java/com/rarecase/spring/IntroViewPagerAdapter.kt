@@ -13,7 +13,7 @@ import android.widget.TextView
 
 class IntroViewPagerAdapter(val context: Context,activityWelcomeLayout: View) : PagerAdapter() {
 
-    var arrayIntroSlidePages: IntArray = intArrayOf(R.layout.welcome_slide1,R.layout.welcome_slide2,R.layout.welcome_slide3,R.layout.welcome_slide4)
+    var arrayIntroSlidePages: IntArray = intArrayOf(R.layout.welcome_slide1,R.layout.welcome_slide2,R.layout.welcome_slide3)
 
     //References to dot resources used in updateSliderDots()
     var dots : Array<TextView>
