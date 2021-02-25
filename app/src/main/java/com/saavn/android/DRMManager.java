@@ -12,15 +12,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class DRMManager {
 
-    private DRMManager(){
-        try {
-            System.loadLibrary("ndkdrm");
-            Log.i("DRMManager", "NDK Library loaded");
-        }catch (Exception e){
-            Log.i("DRMManager","Error loading NDK Library");
-        }
-    }
-
     public static String decryptMediaURL(String str) {
         String str2 = "1.0";
         try {
