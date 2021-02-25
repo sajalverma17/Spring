@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Spring</string>
-    <string name="title_activity_home">HomeActivity</string>
     <string name="next">NEXT</string>
     <string name="skip">SKIP</string>
     <string name="gotit">GOT IT!</string>

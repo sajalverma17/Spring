@@ -36,12 +36,10 @@ public class TabActivity extends AppCompatActivity {
         ViewPager mPager = (ViewPager) findViewById(R.id.tabViewPager);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
-        Fragment offLineSongsFragment = new HomeActivity();
         Fragment lastSharedSongsFragment = new SharedSongListActivity();
-
         tabViewPagerAdapter = new TabViewPagerAdapter(getSupportFragmentManager());
         tabViewPagerAdapter.addFragment(lastSharedSongsFragment,"Recently Shared");
-        tabViewPagerAdapter.addFragment(offLineSongsFragment,"Offline");
+
         mPager.setAdapter(tabViewPagerAdapter);
 
         tabLayout.setupWithViewPager(mPager);

@@ -41,8 +41,6 @@ public class SongItemPresenter implements ISongItemPresenter,Observer{
                 List<Fragment> listViews = a.getSupportFragmentManager().getFragments();
             if(_itemView.getViewPidType() == PidType.Shared)
                 _listView = (ISongListView) listViews.get(0);
-            else if (_itemView.getViewPidType() == PidType.Offline)
-                _listView = (ISongListView) listViews.get(1);
         }
         //Else it is an Activity
         else if(_context instanceof DownloaderActivity){

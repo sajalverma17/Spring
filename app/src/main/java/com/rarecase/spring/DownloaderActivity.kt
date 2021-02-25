@@ -3,21 +3,19 @@ package com.rarecase.spring
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import android.view.View
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.text.Layout
-import android.view.View
-import android.widget.*
+import com.google.android.material.snackbar.Snackbar
 import com.rarecase.model.PidType
 import com.rarecase.model.Song
 import com.rarecase.presenter.contracts.ISongListPresenter
 import com.rarecase.presenter.presenters.SongListPresenter
-import com.rarecase.spring.HomeActivity.WRITE_EXTERNAL_STORAGE_REQUEST_CODE
 import java.util.*
 import java.util.concurrent.Callable
 
@@ -28,6 +26,8 @@ class DownloaderActivity : AppCompatActivity(), ISongListView {
     var stringExtra : String? = null
     var savedSongList : ArrayList<Song>? = null
 
+    private val WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 100
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_downloader)
@@ -37,7 +37,7 @@ class DownloaderActivity : AppCompatActivity(), ISongListView {
         val layoutManager = LinearLayoutManager(this)
         songsRecyclerView.layoutManager = layoutManager
 
-        _presenter = SongListPresenter(this,this)
+        _presenter = SongListPresenter(this, this)
 
         //Get saved objects from Bundle
         //Fill up savedSongList when Device orientation changes
@@ -48,7 +48,7 @@ class DownloaderActivity : AppCompatActivity(), ISongListView {
         //If device orientation changed after Async API call completes,
         // savedInstanceState object will set a non-null value to savedSongList
         if(savedSongList != null){
-                songsRecyclerView.adapter = SongsRecyclerViewAdapter(savedSongList as List<Song>,PidType.Shared)
+                songsRecyclerView.adapter = SongsRecyclerViewAdapter(savedSongList as List<Song>, PidType.Shared)
         }
 
         //savedSongList will be null If device orientation is changed before the Async API call is made, so make call again
@@ -77,7 +77,7 @@ class DownloaderActivity : AppCompatActivity(), ISongListView {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList("savedSongList",savedSongList)
+        outState.putParcelableArrayList("savedSongList", savedSongList)
     }
 
     override fun showProgressBar() {
@@ -93,18 +93,18 @@ class DownloaderActivity : AppCompatActivity(), ISongListView {
     }
 
     override fun showSnackbar(msg: String) {
-        Snackbar.make(findViewById(R.id.content_home),msg, Snackbar.LENGTH_LONG).show()
+        Snackbar.make(findViewById(R.id.content_home), msg, Snackbar.LENGTH_LONG).show()
     }
 
     override fun showSnackbarWithAction(msg: String, actionText: String?, action: Callable<*>?) {
-        val s = Snackbar.make(findViewById(R.id.content_home),msg, Snackbar.LENGTH_INDEFINITE)
+        val s = Snackbar.make(findViewById(R.id.content_home), msg, Snackbar.LENGTH_INDEFINITE)
         s.setAction(actionText, { action?.call() })
         s.show()
     }
 
     override fun setSongList(songList: MutableList<Song>?) {
         savedSongList = songList as ArrayList<Song>
-        songsRecyclerView.adapter = SongsRecyclerViewAdapter(songList as List<Song>,PidType.Shared)
+        songsRecyclerView.adapter = SongsRecyclerViewAdapter(songList as List<Song>, PidType.Shared)
     }
 
     override fun requestStoragePermission() {

@@ -76,10 +76,6 @@ class SongsRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         //Initialize ViewHolder with PidType to distinguish in ItemPresenter
         val holder = myViewHolder(layout,_listType)
-
-        if (_listType == PidType.Offline) {
-            holder.springAction.setImageResource(R.drawable.locked)
-        }
         return holder
     }
 

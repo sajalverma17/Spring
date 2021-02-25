@@ -12,7 +12,6 @@ import com.rarecase.model.remote.Scraper;
 import com.rarecase.model.remote.SongListRepository;
 import com.rarecase.presenter.contracts.ISongListPresenter;
 import com.rarecase.spring.DownloaderActivity;
-import com.rarecase.spring.HomeActivity;
 import com.rarecase.spring.ISongListView;
 import com.rarecase.spring.R;
 import com.rarecase.spring.TabActivity;
@@ -42,11 +41,7 @@ public class SongListPresenter implements ISongListPresenter, Observer {
         {
             TabActivity tabActivity = (TabActivity) context;
             List<Fragment> fragments = tabActivity.getSupportFragmentManager().getFragments();
-
-            if(view instanceof HomeActivity)
-                _view = (ISongListView) fragments.get(1);
-            else
-                _view = (ISongListView) fragments.get(0);
+            _view = (ISongListView) fragments.get(0);
         }
         else
         {
@@ -56,7 +51,7 @@ public class SongListPresenter implements ISongListPresenter, Observer {
     }
 
     /**
-     * TODO: Remove or merge SharedSongListPresenter with this class
+     * Does nothing, as the SharedSongListPresenter loads the songs recently shared.
      */
     @Override
     public void loadOfflineSongs() {
@@ -185,8 +180,6 @@ public class SongListPresenter implements ISongListPresenter, Observer {
 
         retryCall(Object sourceInstance){
 
-            if(_view instanceof HomeActivity)
-                _pidType = PidType.Offline;
             if(_view instanceof DownloaderActivity)
                 _pidType = PidType.Shared;
             _sourceInstance = sourceInstance;
