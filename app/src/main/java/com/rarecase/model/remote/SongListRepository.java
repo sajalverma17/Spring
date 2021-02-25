@@ -39,7 +39,7 @@ public class SongListRepository extends java.util.Observable{
     public void loadSongDetails(List<String> pids, PidType pidType){
         SongCacheManager songCacheManager = new SongCacheManager(context);
         //Try to get songs from cache
-        if(pidType == PidType.Offline || pidType == PidType.Shared) {
+        if(pidType == PidType.Shared) {
             HashMap<String, Song> dictionary = songCacheManager.getCachedSongs(pidType);
             List<String> notInCache = new ArrayList<>();
             for (String pid : pids) {
@@ -110,7 +110,7 @@ public class SongListRepository extends java.util.Observable{
                             SongJsonParser parser = new SongJsonParser();
                             songs.addAll(parser.getSongList(resultJson, pids));
                             //Cache only offline and shared as of now.
-                                if (pidType == PidType.Offline || pidType == PidType.Shared) {
+                                if (pidType == PidType.Shared) {
                                     SongCacheManager cacheManager = new SongCacheManager(context);
                                     cacheManager.cacheSongs(songs, pidType);
                                 }

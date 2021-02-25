@@ -6,11 +6,6 @@ package com.rarecase.model
 enum class PidType {
 
     /**
-     * Pid of song that was saved offline by user
-     */
-    Offline,
-
-    /**
      * PidType for songs that were last shared to Spring
      */
     Shared,
