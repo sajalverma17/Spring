@@ -26,11 +26,10 @@ import java.util.Observer;
 
 public class SongItemPresenter implements ISongItemPresenter,Observer{
 
-    private final Context _context; //To pass into shared prefs
+    private final Context _context;
     private ISongListView _listView;
     private final ISongItemView _itemView;
     private static SongItemRepository _itemRepository;
-    private static final int MIN_STORAGE_SPACE_REQUIRED = 20;
 
     public SongItemPresenter(Context context, ISongItemView itemView){
         _context = context;
@@ -65,21 +64,7 @@ public class SongItemPresenter implements ISongItemPresenter,Observer{
             }
         }
 
-        //All mp3s decrypted will be saved with this name. Later used to identify for ID3 tagging.
-        //String springActionFileName = Utils.generateSpringActionFileName(song.getSong(),song.getId());
-        if (_itemView.getViewPidType() == PidType.Offline) {
-
-            int result = DRMManager.decryptSongPartial(song.getId(), song.getSong(), Environment.DIRECTORY_DOWNLOADS);
-            //Not tagging files when decrypting. Tagging the file on UI thread introduces errors
-            //Utils.tagAudioFile(song,song.getAlbumArt(),storagePath + "/" +song.getSong() +".mp3");
-            if (result != -1) {
-                _listView.showSnackbar(_context.getString(R.string.decryption_successfull));
-            } else {
-                DRMManager.decryptSong(song.getId(), song.getSong(), Environment.DIRECTORY_DOWNLOADS);
-                _listView.showSnackbar(_context.getString(R.string.decryption_failed));
-            }
-
-        } else if (_itemView.getViewPidType() == PidType.Shared || _itemView.getViewPidType() == PidType.Downloading) {
+        if (_itemView.getViewPidType() == PidType.Shared || _itemView.getViewPidType() == PidType.Downloading) {
 
             String mediaUrl = DRMManager.decryptMediaURL(song.getEnc_media_url());
             if ((mediaUrl != null)) {
